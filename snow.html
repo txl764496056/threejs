@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        body{
+            background-image:url(img/snow_bg.jpg);
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: 100% 100%;
+        }
+        body,html{
+            width:100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+    <script src="js/three.js"></script>
+    <!-- 交互插件 -->
+    <script src="js/OrbitControls.js"></script>
+    <!-- 动画状态监测 -->
+    <script src="js/stats.min.js"></script>
+    <script>
+        // webGl
+        let renderer = null,width=0,height=0;
+        function initRenderer(){
+            renderer = new THREE.WebGLRenderer({
+                antialias:true, //抗锯齿效果
+                alpha:true
+            });
+            width = window.innerWidth-17;
+            height = window.innerHeight;
+            renderer.setSize(width,height);
+            // 设置背景色，及透明度，要在提前设置alpha:true
+            renderer.setClearColor("#222",0.3);
+            // renderer.setClearAlpha(0.0);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 相机
+        let camera = null,far=40;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,width/height,1,far);
+            camera.position.set(1,1,far/2);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 辅助-坐标系
+        let axes = null;
+        function helper(){
+            axes = new THREE.AxesHelper(5);
+            scene.add(axes);
+        }
+
+        // 灯光
+        let light = null
+        function initLight(){
+            light = new THREE.AmbientLight({color:"#ffffff"});
+            scene.add(light);
+        }
+
+         // 立方体-与雪无关-测试场景
+        function cube(){
+            let texture2 = new THREE.TextureLoader().load("img/snow1.png");
+            let geometry2 = new THREE.BoxGeometry(4,4,4);
+            let materail2 = new THREE.MeshBasicMaterial({map:texture2});
+            materail2.transparent = true; //透明纹理设置
+            let box2 = new THREE.Mesh(geometry2,materail2);
+            // 加入场景
+            scene.add(box2);
+        }
+
+        // 雪
+        let snow = null;
+        function createSnow(){
+            let geometry1 = new THREE.Geometry();
+            let texture = new THREE.TextureLoader().load("img/snow.png");
+            let materail1 = new THREE.PointsMaterial({
+                map:texture,
+                size:far/100, //大小根据相机的far计算
+                opacity:0.9,
+                transparent:true
+            });
+            let x,y,z;
+            for(let i=0;i<1500;i++){ //雪的数量1500
+                // 下面数值范围根据相机的 near  far  z轴坐标得来的
+                let x = far/2 - far*Math.random();
+                let y = far/2 - far*Math.random();
+                let z = far/4 - far*Math.random(); //z轴坐标 ，越小雪花显示越小，离相机越远
+                
+                let dot = new THREE.Vector3(x,y,z);
+                // Math.random()/150  0.001~0.0067之间
+                // Math.random()/150 为随机值，0.028*(far/40)为基数值，利用实际数值测出规律
+                dot.speedY = Math.random()/150 + 0.028*(far/40); //雪下落速度
+                dot.speedX = ((Math.random() - 0.5)/50)*(far/40); //雪飘落方向
+                // 如果设置4个顶点，就会有4个雪花
+                geometry1.vertices.push(
+                    dot
+                    // new THREE.Vector3(-3,3,0),
+                    // new THREE.Vector3(-3,-3,0),
+                    // new THREE.Vector3(3,-3,0)
+                )
+                
+                // geometry1.faces.push(new THREE.Face3(0,1,1));
+            }
+            snow = new THREE.Points(geometry1,materail1);
+            snow.verticesNeedUpdate = true; //verticesNeedUpdate,用来保存模型中所有顶点位置的数组。
+            scene.add(snow);
+        }
+
+        function creatObject(){
+            createSnow();
+            //cube(); //立方体
+        }
+
+        // 交互插件
+        let controls = null;
+        function initControls(){
+            controls = new THREE.OrbitControls(camera,renderer.domElement);
+            controls.enableDamping = true;  // 使动画循环使用时阻尼或自转 意思是否有惯性
+            controls.dampingFactor = 0.25; //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+            controls.enableZoom = true;  //是否可以缩放
+        }
+
+        // 初始化性能插件
+        let stats = null;
+        function initStats(){
+            stats = new Stats();
+            document.body.append(stats.dom);
+        }
+
+        function render(){
+            let vertices = snow.geometry.vertices;
+            vertices.forEach(function(v){
+                v.y -= v.speedY; 
+                v.x -= v.speedX;
+                // 范围根据相机的far计算
+                if(v.y<-far/4){
+                    v.y = far/2;
+                }
+                if(v.x<=-far/2||v.x>=far/2){
+                    v.speedX = v.speedX * (-1);
+                }
+
+            });
+
+            //设置实时更新网格的顶点信息
+            snow.geometry.verticesNeedUpdate = true;
+
+            renderer.render(scene,camera);
+        }
+
+        // 动画
+        function animate(){
+            // 更新控制器
+            controls.update();
+            render();
+
+            // 更新性能插件
+            stats.update();
+            requestAnimationFrame(animate);
+        }
+
+        // 改变窗口时，重新渲染
+        function onWindowResize(){
+            let w = window.innerWidth - 17;
+            let h = window.innerHeight;
+            camera.aspect = w/h;
+            camera.updateProjectionMatrix();
+
+            render();
+            renderer.setSize(w,h);
+        }
+        
+        function draw(){
+            initRenderer();
+            initCamera();
+            initScene();
+            initLight();
+            creatObject();
+            helper();
+            initStats();
+            initControls();
+
+            animate();
+            window.onresize = onWindowResize;
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>

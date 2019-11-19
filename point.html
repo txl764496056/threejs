@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="point"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        const canvas = document.querySelector("#point");
+        const renderer = new THREE.WebGLRenderer({canvas})
+        renderer.setSize(900,900);
+
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 点-正方形（默认正方形） */
+        let geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3(0.5,0,0));
+        geometry.vertices.push(new THREE.Vector3(1.5,1,0));
+        geometry.vertices.push(new THREE.Vector3(2.5,2,0));
+        let material = new THREE.PointsMaterial({color:"#ff0000",size:0.5});
+        let points = new THREE.Points(geometry,material);
+        scene.add(points);
+
+        /* 点-自定义形状-圆 */
+        let dot = document.createElement('canvas');
+            dot.width = 100;
+            dot.height = 100;
+            let context = dot.getContext("2d");
+            context.fillStyle = "#00ff00";
+            context.arc(50,50,45,0,2*Math.PI);
+            context.fill();
+        let texture = new THREE.Texture(dot);
+        texture.needsUpdate = true;
+        let geometry2 = new THREE.Geometry();
+            geometry2.vertices.push(new THREE.Vector3(-0.5,0,0));
+            geometry2.vertices.push(new THREE.Vector3(-1,1,0));
+            geometry2.vertices.push(new THREE.Vector3(-1.5,2,0));
+            let materail2 = new THREE.PointsMaterial({color:"#fff",size:0.5,map:texture});
+            let points2 = new THREE.Points(geometry2,materail2);
+        scene.add(points2);
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(60,1,0.1,5);
+        camera.position.z = 5;
+
+        /* 渲染 */
+        renderer.render(scene,camera);
+    </script>
+</body>
+</html>

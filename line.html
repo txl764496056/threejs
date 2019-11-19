@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="line"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        const canvas = document.querySelector('#line');
+        const renderer = new THREE.WebGLRenderer({canvas});;
+        renderer.setSize(900,900);
+
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 线-实线 */
+        let geometry1 = new THREE.Geometry();
+            geometry1.vertices.push(
+                new THREE.Vector3(-1,-1,0),
+                new THREE.Vector3(1,1,0)
+            );
+            let material1 = new THREE.LineBasicMaterial({color:"#ff0000"});
+            let line1 = new THREE.Line(geometry1,material1);
+        scene.add(line1);
+
+        /* 线-虚线 */
+        let geometry2 = new THREE.Geometry();
+            geometry2.vertices.push(
+                new THREE.Vector3(-1,1,0),
+                new THREE.Vector3(1,-1,0)
+            );
+            let materail2 = new THREE.LineDashedMaterial({color:"#00ffff",dashSize:0.3,gapSize:0.2});
+            let line2 = new THREE.LineSegments(geometry2,materail2);
+            line2.computeLineDistances();//****
+
+        scene.add(line2);
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(50,1,1,5);
+        camera.position.z = 5;
+
+        renderer.render(scene,camera);
+    </script>
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="path"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        
+        const canvas = document.querySelector("#path");
+        const renderer = new THREE.WebGLRenderer({canvas});
+        renderer.setSize(800,800);
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(60,1,0.1,1000);
+        let camera_z = 300;
+        camera.position.z = camera_z;
+
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 球体 */
+        let geometry = new THREE.SphereGeometry(40,30,30);
+        let material = new THREE.PointsMaterial({color:"#ff0000"});
+        let sphere = new THREE.Points(geometry,material);
+        scene.add(sphere);
+
+        /* 渲染 */
+        // renderer.render(scene,camera);
+
+        /* 球体旋转 */
+        function sphereRotate(){
+            requestAnimationFrame(render);
+            sphere.rotation.x += 0.01;
+            sphere.rotation.y += 0.01;
+            renderer.render(scene,camera);
+        }
+
+        /* 绘制路径 */
+        let path = new THREE.Path();
+        path.bezierCurveTo(10,100,20,-30,30,19);
+        path.bezierCurveTo(40,-5,50,150,60,-39);
+        path.closePath();
+
+        /* 将路径转为形状 */
+        let points = path.getPoints();
+        let geometry2 = new THREE.BufferGeometry().setFromPoints(points);
+        let material2 = new THREE.LineBasicMaterial({color:"#00ff00"});
+        let path1 = new THREE.Line(geometry2,material2);
+        path1.position.set(50,50,1);
+        scene.add(path1);
+
+        /* 相机移动 */
+        let progress = 0;
+        function cameraTranslate(){
+            requestAnimationFrame(cameraTranslate);
+            progress += 0.003;
+            let point = path.getPointAt(progress);
+            if(point){
+                camera.position.set(point.x,point.y,camera_z);
+            }else{
+                progress = 0;
+            }
+            renderer.render(scene,camera);
+        }
+
+        // sphereRotate();
+        cameraTranslate();
+
+    </script>
+</body>
+</html>

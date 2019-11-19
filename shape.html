@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="shape"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        
+        const canvas = document.querySelector("#shape");
+        const renderer = new THREE.WebGLRenderer({canvas});
+        renderer.setSize(900,900);
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(60,1,0.1,5);
+        camera.position.z = 5;
+
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 面-形状 */
+        let shape1 = new THREE.Shape();
+        // 参数(x,y,r,angle,angle,方向)
+        shape1.absarc(0,0,1,0/180*Math.PI,45/180*Math.PI,false);
+        let gemoetry1 = new THREE.ShapeGeometry(shape1);
+        let material1 = new THREE.LineBasicMaterial({color:"#ff0000"});
+        let arc1 = new THREE.Line(gemoetry1,material1);
+        scene.add(arc1);
+
+        /* 面-填充 */
+        let shape2 = new THREE.Shape();
+        shape2.absarc(0,0,-1,0,45/180*Math.PI,false);
+        shape2.lineTo(0,0);
+        let gemoetry2 = new THREE.ShapeGeometry(shape2);
+        let material2 = new THREE.MeshBasicMaterial({color:"#00ff00"});
+        let arc2 = new THREE.Mesh(gemoetry2,material2);
+        scene.add(arc2);
+
+        /* 面-二维扇形 */
+        let gemoetry3 = new THREE.CircleGeometry(1,6,90/180*Math.PI,45/180*Math.PI);
+        gemoetry3.vertices.shift(); //删除的熬圆点的一根连线
+        let material3 = new THREE.LineBasicMaterial({color:"#00ffff"});
+        let arc3 = new THREE.Line(gemoetry3,material3);
+        scene.add(arc3);
+
+        /* 面-二维平面 */
+        let geometry4 = new THREE.PlaneGeometry(0.5,0.5);
+        let material4 = new THREE.MeshBasicMaterial({color:"#ffa933"});
+        let rect = new THREE.Mesh(geometry4,material4);
+        scene.add(rect);
+
+        /* 渲染 */
+        renderer.render(scene,camera);
+
+    </script>
+</body>
+</html>

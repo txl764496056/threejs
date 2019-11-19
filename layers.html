@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h3>threejs提供了层次的支持。和相机处于同一层次的对象可见，否则不可见。在threejs中，最多可以设置32层，默认的层次是1。层次在有些系统中很有用，可以将不同的模式的对象设成不同的层次，这样，切换模式就只需切换一下相机的层次就可以了。</h3>
+    <canvas id="layers"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        let canvas = document.querySelector("#layers");
+        let renderer = new THREE.WebGLRenderer({canvas});
+        renderer.setSize(800,800);
+
+        /* 相机 */
+        let camera = new THREE.PerspectiveCamera(60,1,0.1,100);
+        camera.position.z = 50;
+
+        /* 场景 */
+        let scene = new THREE.Scene();
+
+        /* 二维平面几何 */
+        let geometry1 = new THREE.PlaneGeometry(5,30);
+        let material1 = new THREE.MeshBasicMaterial({color:"#ff9900"});
+        let box1 = new THREE.Mesh(geometry1,material1);
+        scene.add(box1);
+
+        let geometry2 = new THREE.PlaneGeometry(30,5);
+        let material2 = new THREE.MeshBasicMaterial({color:"#99bb22"});
+        let box2 = new THREE.Mesh(geometry2,material2);
+        scene.add(box2);
+
+        // 设置层次,box2层次设置为2，相机层次是1，box2变为不可见
+        let layers = new THREE.Layers();
+        layers.set(2);
+        box2.layers = layers;
+
+        /* 渲染 */
+        renderer.render(scene,camera);
+
+    </script>
+</body>
+</html>

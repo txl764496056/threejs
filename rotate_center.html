@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="rotate-center"></canvas>
+    <img src="img/rotate_center.jpg" alt="">
+    <script src="js/three.js"></script>
+    <script>
+        
+        const canvas = document.querySelector("#rotate-center");
+        const renderer = new THREE.WebGLRenderer({canvas});
+        renderer.setSize(800,800)
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(60,1,1,700);
+        camera.position.z = 200;
+
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 二维矩形 */
+        let geometry = new THREE.PlaneGeometry(100,30);
+        let material = new THREE.MeshBasicMaterial({color:"#ff0000"});
+        let rect = new THREE.Mesh(geometry,material);
+        rect = changeCenter(-50,15,0,rect);
+        scene.add(rect);
+
+        /* 将对象加入组，组旋转，单个对象在组的转动下被转动，就像这单个对象在转动 */
+        function changeCenter(x,y,z,obj){
+            let obj_3d = new THREE.Object3D();
+            // 移动后，obj左上角就最准了obj_3d中心点，
+            // 这样obj_3d旋转时，obj就看起来时绕着左上角旋转的
+            obj_3d.position.set(x,y,z);
+            obj_3d.add(obj);
+            // 将obj_3d与obj移动的反向移动，试obj回到原始位置上
+            obj.position.set(-x,-y,-z);
+            return obj_3d;
+        }
+
+        /* 渲染 */
+        function render(){
+            requestAnimationFrame(render);
+            rect.rotation.z += 0.01;
+            renderer.render(scene,camera);
+        }
+
+        render();
+
+    </script>
+</body>
+</html>

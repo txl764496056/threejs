@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="sprite"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        const canvas = document.querySelector("#sprite");
+        const renderer = new THREE.WebGLRenderer({canvas});
+        renderer.setSize(800,800);
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(60,1,0.1,5);
+        camera.position.z = 5;
+
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 2D形状 */
+        let canvas2 = document.createElement('canvas');
+            canvas2.width = 100;
+            canvas2.height = 100;
+            let context = canvas2.getContext("2d");
+            context.fillStyle = "#ff0000";
+            context.arc(50,50,50,0,2*Math.PI);
+            context.fill();
+        let texture = new THREE.Texture(canvas2);
+            texture.needsUpdate = true;
+        let material1 = new THREE.SpriteMaterial({map:texture});
+        let mesh = new THREE.Sprite(material1);
+        // mesh.scale.set(1,1,0.2);  //缩放
+        scene.add(mesh);
+
+        /* 创建文字 */
+        let canvas3 = document.createElement("canvas");        
+            canvas3.width = 100;
+            canvas3.width = 100;
+            let context3 = canvas3.getContext("2d");
+            context3.fillStyle = "#ffff00";
+            context3.lineWidth = 4;
+            context3.font = "Bold 36px Arial";
+            context3.fillText("hello",10,90);
+        let texture2 = new THREE.Texture(canvas3);
+            texture2.needsUpdate = true;
+            // {map:texture2,transparent:true} 可以设置透明材质
+        let material2 = new THREE.SpriteMaterial({map:texture2});
+        let mesh2 = new THREE.Sprite(material2);
+        mesh2.position.set(1,1,1);
+        scene.add(mesh2);
+
+        renderer.render(scene,camera);
+
+    </script>
+</body>
+</html>

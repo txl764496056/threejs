@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <canvas id="bone"></canvas>
+    <script src="js/three.js"></script>
+    <script>
+        /*
+         * 步骤：
+         * （1）创建形状
+         * （2）创建骨架
+         * （3）为形状的每一个点指定其控制的骨骼
+         * （4）将形状和骨架中的骨骼绑定起来
+         */
+        const canvas = document.querySelector("#bone");
+        const renderer = new THREE.WebGLRenderer({canvas});
+        renderer.setSize(800,800);
+        
+        /* 场景 */
+        const scene = new THREE.Scene();
+
+        /* 相机 */
+        const camera = new THREE.PerspectiveCamera(70,1,0.1,5);
+        camera.position.z = 5;
+
+        /* 骨骼 */
+        let segmentHeight = 3;
+        let segmentCount = 4;
+        let height = segmentCount * segmentHeight;
+        let halfHeight = height * 0.5;
+
+        let sizing = {
+            segmentCount,
+            segmentHeight,
+            halfHeight,
+            height
+        }
+
+        /* 创建骨架 */
+        let bones = [];
+        let prevBone = new THREE.Bone();
+        bones.push(prevBone);
+        prevBone.position.y = - sizing.halfHeight;
+        for(let i=0;i<sizing.segmentCount;i++){
+            let bone = new THREE.Bone();
+            bone.position.y = sizing.segmentHeight;
+            // bone.position.x = i;
+            bones.push(bone);
+            prevBone.add(bone);
+            prevBone = bone;
+        }
+        let skeleton = new THREE.Skeleton(bones);
+
+        let geometry = new THREE.CylinderBufferGeometry(
+            1.5, //radiusTop
+            1.5, //radiusBottom
+            sizing.height, //height
+            8, //radiusSegments
+            sizing.segmentCount * 3, //heightSegments
+            true //openEnded 指明该圆锥的底面是开放的还是封顶的,flase:封顶
+        );
+
+        //将形状的每个点和骨骼建立关联，其中skinIndices指定该点由哪些骨骼控制（通过骨骼序号指定），skinWeights指定这些骨骼对该点的控制能力
+        let v = new THREE.Vector3();
+        let skinIndices = [];
+        let skinWeights = [];
+        let position = geometry.attributes.position;
+        for(let i=0;i<position.count;i++){
+            v.fromBufferAttribute(position,i);
+            let y = ( v.y + sizing.halfHeight );
+            let skinIndex = Math.floor( y / sizing.segmentHeight );
+            let skinWeight = ( y % sizing.segmentHeight ) / sizing.segmentHeight;
+            skinIndices.push( skinIndex ,skinIndex+1,0,0);
+            skinWeights.push( 1-skinWeight,skinWeight,0,0);
+        }
+
+        geometry.addAttribute('skinIndex',new THREE.Uint16BufferAttribute(skinIndices,4));
+        geometry.addAttribute('skinWeight',new THREE.Float32BufferAttribute(skinWeights,4))
+
+        let material = new THREE.MeshPhongMaterial({
+            skinning:true, //材质是否使用蒙皮，
+            color:"#156289", //
+            emissive:"#a72534", //材质放射光颜色，
+            side: THREE.DoubleSide, //渲染哪一面
+            wireframe:true // 将几何体传染为线框
+        });
+        let mesh = new THREE.SkinnedMesh(geometry,material);
+
+        // 绑定骨架和网格
+        let rootBone = skeleton.bones[0];
+        mesh.add(rootBone);
+        mesh.bind( skeleton );
+        mesh.scale.multiplyScalar(0.3); //缩放
+        scene.add(mesh);
+
+        /* 骨架辅助线 */
+        let skeletonHelper = new THREE.SkeletonHelper(mesh);
+        skeletonHelper.material.lineWidth = 2;
+        scene.add(skeletonHelper);
+
+        /* 渲染 */
+        let angle = 0;
+        function render(){
+            requestAnimationFrame(render);
+            angle += 0.1;
+            angle = angle%60;
+            skeleton.bones[3].rotation.z = angle/180*Math.PI;
+            skeleton.bones[1].rotation.z = -angle/180*Math.PI;
+            renderer.render(scene,camera);
+        }
+        requestAnimationFrame(render);
+
+    </script>
+</body>
+</html>
