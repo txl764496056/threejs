@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>下雨场景</title>
+    <style>
+        *{
+            margin:0;padding:0;
+        }
+        body{
+            background-image:url(img/rain.jpg);
+            background-repeat:no-repeat;
+            background-size:cover;
+            background-position:center center;
+        }
+    </style>
+</head>
+<body>
+
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script src="js/stats.min.js"></script>
+    <script src="js/dat.gui.min.js"></script>
+    <script>
+
+        let renderer = null,width=0,height=0;
+        function initRenderer(){
+            width = window.innerWidth -10;
+            height = window.innerHeight;
+
+            renderer = new THREE.WebGLRenderer({
+                antialias:true,
+                alpha:true
+            });
+            renderer.setSize(width,height);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 相机
+        let camera = null,far=100,aspect=1;
+        function initCamera(){
+            aspect = width/height;
+            camera = new THREE.PerspectiveCamera(45,aspect,0.1,far);
+            camera.position.set(1,1,far/2);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 灯光
+        let light = null;
+        function initLight(){
+            light = new THREE.AmbientLight({color:"#ffffff",intensity:1});
+            light.position.set(5,1,6);
+            scene.add(light);
+        }
+
+        // 与雨滴效果无关，---场景测试
+        function createBox(){
+            let geometry = new THREE.BoxGeometry(5,5,5);
+            let material = new THREE.MeshPhongMaterial({color:"#00ee99"});
+            let box = new THREE.Mesh(geometry,material);
+            scene.add(box);
+        }
+
+        // 雨
+        let rain = null;
+        function createRain({size,opacity,color}={opacity:1,size:1.6,color:"#ffffff"}){
+            let texture = new THREE.TextureLoader().load("img/rain.png");
+            let geometry = new THREE.Geometry();
+            let material = new THREE.PointsMaterial({
+                map:texture,
+                transparent:true,
+                size,
+                color,
+                opacity
+            });
+            
+            let x ,y,z;
+            for(let i=0;i<1000;i++){
+                z = far/2-Math.random()*far;
+                y = (0.5 - Math.random())*far;
+                x = (far/2 - far*Math.random())*aspect;
+                let dot = new THREE.Vector3(x,y,z);
+                // dot.speedX = 0.01;
+                dot.speedY = 0.1;
+                geometry.vertices.push(dot);
+            }
+ 
+            rain = new THREE.Points(geometry,material);
+            scene.add(rain);
+        }
+
+        // 辅助线
+        let helper = null;
+        function initHelper(){
+            helper = new THREE.AxesHelper(10);
+            scene.add(helper);
+        }
+
+        // 交互
+        let controls = null;
+        function initControls(){
+            controls = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 性能插件
+        let stats = null;
+        function initStats(){
+            stats = new Stats();
+            document.body.append(stats.dom);
+        }
+
+        // 用户图形操作界面
+        let gui = null;
+        function initGui(){
+            gui = {
+                "opacity":1,
+                "size":1.2,
+                "color":"#ffffff",
+                redraw(){
+                    if(rain){
+                        scene.remove(rain);
+                    }
+                    createRain({opacity:gui.opacity,size:gui.size,color:gui.color});
+                }
+            }
+
+            let datGui = new dat.GUI();
+            datGui.add(gui,"opacity",0,1).onChange(gui.redraw);
+            datGui.add(gui,"size",1,3).onChange(gui.redraw);
+            datGui.addColor(gui,"color").onChange(gui.redraw);
+            gui.redraw();
+        }
+        
+        function render(){
+            // 更新控制器
+            controls.update();
+
+            let vertices = rain.geometry.vertices;
+            vertices.forEach(function(v){
+                v.y -= v.speedY;
+                // v.x -= v.speedX;
+                if(v.y<-far/2){
+                    v.y = far/2;
+                }
+            });
+
+            // 设置实时更新网格顶点
+            rain.geometry.verticesNeedUpdate = true;
+
+            // 更新新能插件
+            stats.update();
+
+            renderer.render(scene,camera);
+        }
+
+        function animate(){
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function init(){
+            initRenderer();
+            initCamera();
+            initScene();
+            initLight();
+            
+            initHelper();
+            initControls();
+            initStats();
+            initGui();
+
+            // createBox();
+            // createRain();
+
+            // render();
+            animate();
+        }
+
+        init();
+    </script>
+</body>
+</html>

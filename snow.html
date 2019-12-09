@@ -72,7 +72,7 @@
          // 立方体-与雪无关-测试场景
         function cube(){
             let texture2 = new THREE.TextureLoader().load("img/snow1.png");
-            let geometry2 = new THREE.BoxGeometry(4,4,4);
+            let geometry2 = new THREE.Geometry(4,4,4);
             let materail2 = new THREE.MeshBasicMaterial({map:texture2});
             materail2.transparent = true; //透明纹理设置
             let box2 = new THREE.Mesh(geometry2,materail2);
