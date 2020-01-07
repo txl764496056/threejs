@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+    <script src="js/three.js"></script>
+    <!-- 性能检测 -->
+    <script src="js/stats.min.js"></script>
+    <!-- 交互 -->
+    <script src="js/OrbitControls.js"></script>
+    <script>
+        // WebGL
+        let renderer = null,width=200,height=200;
+        function initRender(){
+            renderer = new THREE.WebGLRenderer({
+                antilias:true, //抗锯齿
+                alpha:true //默认背景透明
+            });
+            
+            width = window.innerWidth - 17;
+            height = window.innerHeight;
+
+            renderer.setClearColor("#000")
+            renderer.setSize(width,height);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function  initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null,far=400;
+        function initCamrea(){
+            camera = new THREE.PerspectiveCamera(45,width/height,1,far);
+            camera.position.set(0,0,far/2);
+            scene.add(camera);
+        }
+
+        // 点
+        let clound_points = null;
+        function cloundPoints(){
+
+            let gemo = new THREE.Geometry();
+            let size = 14;
+            let material = new THREE.PointsMaterial({
+                vertexColors:true,
+                size,
+                sizeAttenuation:false //大小是否跟随距离儿变化,false：否
+            });
+
+            // x轴面上排列点阵
+            for(let x=-far/8;x<far/8;x+=size){
+                for(let y=-far/8;y<far/8;y+=size){
+                    // 生成顶点
+                    let point = new THREE.Vector3(x,y,0);
+                    gemo.vertices.push(point);
+                    // 颜色生成
+                    let color = new THREE.Color();
+                    color.setHSL(Math.random(),Math.random(),0.5);
+                    gemo.colors.push(color);
+                }
+            }
+
+            clound_points = new THREE.Points(gemo,material);
+            scene.add(clound_points);
+        }
+
+        // 辅助线
+        let help = null;
+        function helper(){
+            help = new THREE.AxesHelper(50);
+            scene.add(help);
+        }
+
+        // 性能
+        let stats = null;
+        function initStats(){
+            stats = new Stats();
+            document.body.appendChild(stats.dom);
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+            orbit.enableDamping = true;  // 使动画循环使用时阻尼或自转 意思是否有惯性
+            orbit.dampingFactor = 0.25; //动态阻尼系数 就是鼠标拖拽旋转灵敏度
+            orbit.enableZoom = true; //是否可以缩放
+            orbit.enablePan = true; //是否开启右键拖拽
+            orbit.minDistance = 20;//设置相机距离原点的最近距离
+            orbit.maxDistance = far;//设置相机距离原点的最远距离
+        }
+
+        // 渲染
+        function render(){
+            
+            stats.update();
+            orbit.update();
+
+            renderer.render(scene,camera); //-------要加入场景相机并渲染才能看到
+        }
+
+        // 窗口响应
+        function windowResize(){
+            width = window.innerWidth -17;
+            height = window.innerHeight;
+            camera.aspect = width/height;
+            renderer.setSize(width,height);
+        }
+
+        // 动画
+        function animate(){
+            clound_points.rotation.y += 0.01;
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function draw(){
+            initRender();
+            initScene();
+            initCamrea();
+
+            cloundPoints();
+
+            helper();
+            initStats();
+            initOrbitControls();
+
+            // render();
+
+            animate();
+            window.onresize = windowResize;
+        }
+
+        draw();
+    </script>
+</body>
+</html>

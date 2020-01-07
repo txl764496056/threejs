@@ -28,13 +28,13 @@
         function initRenderer(){
             renderer = new THREE.WebGLRenderer({
                 antialias:true, //抗锯齿效果
-                // alpha:true
+                alpha:true
             });
             width = window.innerWidth-10;
             height = window.innerHeight;
             renderer.setSize(width,height);
             // 设置背景色，及透明度，要在提前设置alpha:true
-            renderer.setClearColor("#222",0.3);//--------------------无效
+            renderer.setClearColor("#000",1); //-------要加入场景相机并渲染才能看到
             document.body.appendChild(renderer.domElement);
         }
 
@@ -121,9 +121,9 @@
         let orbit = null;
         function initOrbitControls(){
             orbit = new THREE.OrbitControls(camera,renderer.domElement);
-            orbit.enableZoom = true;
-            orbit.enableDamping = true;
-            orbit.dampingFactor = 0.25;
+            orbit.enableZoom = true; //是否可以缩放
+            orbit.enableDamping = true;  // 使动画循环使用时阻尼或自转 意思是否有惯性
+            orbit.dampingFactor = 0.25; //动态阻尼系数 就是鼠标拖拽旋转灵敏度
         }
 
         // 用户操作界面
@@ -167,6 +167,16 @@
             requestAnimationFrame(animate);
         }
 
+        // 窗口变化
+        function windowResize(){
+            width = window.innerWidth -17;
+            height = window.innerHeight;
+
+            camera.aspect = width/height;
+
+            renderer.setSize(width,height);
+        }
+
         function draw(){
             initRenderer();
             initScene();
@@ -182,7 +192,8 @@
 
             animate();
 
-            render();
+            window.onresize = windowResize;
+            // render();
         };
 
         draw();
