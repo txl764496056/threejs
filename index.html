@@ -28,7 +28,7 @@
             justify-content: space-between;
             
         }
-        .nav-list a{
+        .nav-list1 a,.nav-list2 .item .left,.nav-list2 .item .right{
             text-decoration: none;
             font-size: 14px;
             display:inline-block;
@@ -39,26 +39,28 @@
             width:48%;
             letter-spacing: 1px;
         }
-        .nav-list a:hover{
+        .nav-list1 a:hover,.nav-list2 .item .left:hover{
             color:#000;
             font-weight: bold;
             background-color:rgb(182, 182, 182);
         }
-        .nav-list span{
+        .nav-list2 .item{
             display:flex;
             align-items: center;
             justify-content: center;
             width:100%;
         }
-        .nav-list a:last-of-type{
+        .nav-list2 .item:last-of-type{
             margin-right:auto;
         }
-        .nav-list span a{margin:auto;}
-        a.small_a,a.small_a:hover{
+        .nav-list2 .item .right,.nav-list2 .item .right:hover{
             font-size:12px;
-            color:#0000ff;
             margin:auto;
             background-color:transparent;
+        }
+
+        .nav-list2 .item .right.blue{
+            color:#0000ff;
         }
         
         .iframe-view1{
@@ -72,7 +74,7 @@
     <div class="container">
         <div class="left">
             <h2 class="title">原理分析：three.js基础</h2>
-            <div class="nav-list">
+            <div class="nav-list nav-list1">
                 <a href="rotate_cube.html" target="view1">旋转立方体</a>
                 <a href="point.html" target="view1">创建点</a>
                 <a href="line.html" target="view1">创建线</a>
@@ -84,18 +86,25 @@
                 <a href="layers.html" target="view1">设置层次</a>
             </div>
             <h2 class="title">csdn专注前端30年，博客教程</h2>
-            <div class="nav-list">
-                <span>
-                    <a href="snow.html" target="view1">下雪</a>
-                    <a class="small_a" href="snow2.html" target="_blank">新窗口打开，可操作图形用户界面工具</a>
-                </span>
-                <span>
-                    <a href="rain.html" target="view1">下雨</a>
-                    <a class="small_a" href="rain.html" target="view1">新窗口打开，可操作图形用户界面</a>
-                </span>
+            <div class="nav-list nav-list2">
+                <div class="item">
+                    <a class="left" href="snow.html" target="view1">下雪</a>
+                    <a class="right blue" href="snow2.html" target="_blank">新窗口打开，可操作图形用户界面工具</a>
+                </div>
+                <div class="item">
+                    <a class="left" href="rain.html" target="view1">下雨</a>
+                    <a class="right blue" href="rain.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                </div>
+                <div class="item">
+                    <a class="left" href="format_point.html" target="view1">
+                        格式化粒子
+                        <p>PointsMaterial</p>
+                    </a>
+                    <a class="right blue" href="format_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                </div>
             </div>
         </div>
-        <iframe src="rain.html" class="iframe-view1" name="view1" frameborder="0"></iframe>
+        <iframe src="format_point.html" class="iframe-view1" name="view1" frameborder="0"></iframe>
     </div>
 </body>
 </html>

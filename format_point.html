@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        body,html{
+            width:100%;
+            height:100%;
+        }
+    </style>
+</head>
+<body>
+    
+    <script src="js/three.js"></script>
+    <!-- 性能监测 -->
+    <script src="js/stats.min.js"></script>
+    <!-- 交互插件 -->
+    <script src="js/OrbitControls.js"></script>
+    <!-- 图形用户操作界面 -->
+    <script src="js/dat.gui.min.js"></script>
+    <script>
+        // webGl
+        let renderer = null,width=200,height=200;
+        function initRenderer(){
+            renderer = new THREE.WebGLRenderer({
+                antialias:true, //抗锯齿效果
+                // alpha:true
+            });
+            width = window.innerWidth-10;
+            height = window.innerHeight;
+            renderer.setSize(width,height);
+            // 设置背景色，及透明度，要在提前设置alpha:true
+            renderer.setClearColor("#222",0.3);//--------------------无效
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null,far=400;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,width/height,0.1,far);
+            camera.position.set(0,0,far/2);
+            scene.add(camera);
+        }
+
+        // 光
+        function initLight(){
+            let light = new THREE.AmbientLight({color:"#ffffff"});
+            light.position.set(60,50,50);
+            scene.add(light);
+        }
+
+        // 添加简单几何体-做测试
+        function addBox(){
+            let gbox1 = new THREE.BoxGeometry(6,6,6);
+            let material = new THREE.MeshBasicMaterial({color:"#9900aa"});
+            let box1 = new THREE.Mesh(gbox1,material);
+            box1.position.set(0,-10,0);
+            scene.add(box1);
+        }
+
+        // 添加几何体---下面生成的所有点都是gemo的顶点，只有一个大的几何体，上面很多的顶点
+        let clound_point = null;
+        function cloundPoint({h=0.5,s=0.6,l=0.3,color_random=true}={}){
+            // 自定义几何体
+            let gemo = new THREE.Geometry();
+            for(let i=0;i<far*35;i++){
+                // 生成顶点
+                let point = new THREE.Vector3(
+                     width*(0.5-Math.random()),
+                     height*(0.5-Math.random()),
+                     far*(0.5-Math.random())
+                    );
+                // 将顶点放入几何
+                gemo.vertices.push(point);
+                // 生成颜色
+                let color = new THREE.Color(); 
+                // color.setRGB(Math.random(),0.6,0.3);//rgb模式
+                // color.setHSL(Math.random(),0.6,0.3); //hsl模式
+                // 随机颜色
+                if(color_random){
+                    color.setHSL(Math.random(),Math.random(),Math.random()); 
+                // 用户设置颜色
+                }else{
+                    color.setHSL(h,s,l);
+                }
+                gemo.colors.push(color); 
+            }
+            let material = new THREE.PointsMaterial({
+                    size:4,
+                    vertexColors:true,
+                    sizeAttenuation:false //粒子大小不会跟随距离变化
+                }); 
+            clound_point = new THREE.Points(gemo,material);
+            scene.add(clound_point); //加入场景
+        }
+
+        // 辅助线
+        function helper(){
+            let help = new THREE.AxesHelper(10);
+            scene.add(help);
+        }
+
+        // 性能
+        let stats = null;
+        function initStats(){
+            stats = new Stats();
+            document.body.append(stats.dom);
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+            orbit.enableZoom = true;
+            orbit.enableDamping = true;
+            orbit.dampingFactor = 0.25;
+        }
+
+        // 用户操作界面
+        let gui = null;
+        function initGui(){
+            gui = {
+                "h":0.5,
+                "s":0.6,
+                "l":0.3,
+                "color_random":true,
+                redraw:function(){
+                    if(clound_point){
+                        scene.remove(clound_point);
+                    }
+                    cloundPoint({h:gui.h,s:gui.s,l:gui.l,color_random:gui.color_random});
+                }
+            }
+            let datGui = new dat.GUI();
+            datGui.add(gui,"h",0,1).onChange(gui.redraw);
+            datGui.add(gui,"s",0,1).onChange(gui.redraw);
+            datGui.add(gui,"l",0,1).onChange(gui.redraw);
+            datGui.add(gui,"color_random").onChange(gui.redraw);
+        }
+
+        // 渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        // 动画
+        function animate(){
+            
+            clound_point.rotation.x += 0.001;
+            clound_point.rotation.y += 0.001;
+            clound_point.rotation.z += 0.001;
+            
+            stats.update();
+            orbit.update();
+
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function draw(){
+            initRenderer();
+            initScene();
+            initCamera();
+            initLight();
+            // addBox(); //测试场景
+            cloundPoint();
+
+            helper();
+            initStats();
+            initOrbitControls();
+            initGui();
+
+            animate();
+
+            render();
+        };
+
+        draw();
+    </script>
+</body>
+</html>
