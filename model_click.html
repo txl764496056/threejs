@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css"/>
+</head>
+<body>
+    
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+        // WebGL
+        let renderer = null,width=200,height=200;
+        function initRenderer(){
+            renderer = new THREE.WebGLRenderer({
+                antilias:true, //抗锯齿效果
+                alpha:true 
+            });
+            width = window.innerWidth -17;
+            height = window.innerHeight;
+            renderer.setSize(width,height);
+            // 设置背景色，及透明度，要在提前设置alpha:true
+            renderer.setClearColor("#000",1); //-------要加入场景相机并渲染才能看到
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null,far=400;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,width/height,1,far);
+            camera.position.set(0,0,far/2);
+            scene.add(camera);
+        }
+
+        // 光
+        let light = null,light2=null;
+        function initLight(){
+            // 左上
+            light = new THREE.DirectionalLight(0xffffff,0.8); 
+            light.position.set(-far/1.5,far/1.5,far/1.5);
+            scene.add(light);
+            // 右下
+            light2 = new THREE.DirectionalLight(0xffffff,0.8);
+            light2.position.set(far/1.5,-far/1.5,far/1.5);
+            scene.add(light2);
+
+            // 正下方-环境光
+            light3 = new THREE.AmbientLight(0xffffff,0.5);
+            light3.position.set(0,-far/1.5,0);
+            scene.add(light3);
+        }
+
+        // 加入立方块
+        let cubes = null;
+        function addCubes(){
+            let size = 10;
+            let gemo = new THREE.CubeGeometry(size,size,size);
+            for(let i=0;i<far;i++){
+                let material = new THREE.MeshPhongMaterial({
+                    shininess:60,
+                    // <255,避免生成太亮的模型
+                    color:"rgb("+parseInt(Math.random()*180)+","+parseInt(Math.random()*100)+","+parseInt(Math.random()*160)+")"
+                });
+                let cube = new THREE.Mesh(gemo,material);
+                // 立方块位置
+                cube.position.set( 
+                    far/2*(0.5-Math.random()),
+                    far/2*(0.5-Math.random()),
+                    far/2*(0.5-Math.random()) 
+                );
+                // 立方块旋转
+                cube.rotation.set(
+                    size*Math.random(),
+                    size*Math.random(),
+                    size*Math.random()
+                )
+                // 加入场景
+                scene.add(cube);
+            }
+        }
+
+        // 点击事件
+        /**
+        * 以下不明白的请查阅以下文档资料
+        * 案例分析及欣赏：https://blog.csdn.net/qq_30100043/article/details/79054862
+        * 坐标转换：https://segmentfault.com/a/1190000010490845
+        * 坐标系理解：https://blog.csdn.net/meegomeego/article/details/8686816
+        * 中文官方文档：https://techbrood.com/threejs/docs/#参考手册/核心模块(Core)/光线投射器(Raycaster)
+        */
+        let raycaster = new THREE.Raycaster();
+        let mouse = new THREE.Vector2(); //二维坐标系
+        function onMouseClick(e){
+            // 将二维坐标系的点，转为三维坐标系的点（从屏幕坐标系到视觉坐标系）
+            // 将鼠标点击的点，转为已屏幕中心为原点的坐标值-**“原理”在img文件夹下的坐标推导图里**
+            mouse.x = (e.clientX/window.innerWidth)*2-1;
+            mouse.y = -(e.clientY/window.innerHeight)*2+1;
+
+            // mouse:鼠标的二维坐标系，camera把射线起点设置在该相机位置处
+            raycaster.setFromCamera(mouse,camera);
+
+            // 检测并返回与射线相交的物体
+            /**  属性
+            distance – 射线的起点到相交点的距离 
+            point – 在世界坐标中的交叉点 
+            face – 相交的面 
+            faceIndex – 相交的面的索引 
+            indices – 组成相交面的顶点索引 
+            object – 相交的对象
+            */
+            // 将相交的模型设置为白色
+            let intersets = raycaster.intersectObjects(scene.children);
+            for(let i=0;i<intersets.length;i++){
+                intersets[i].object.material.color.set(0xffffff);
+            }
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 辅助线
+        let axes_help = null;
+        function axesHelp(){
+            axes_help = new THREE.AxesHelper(20);
+            scene.add(axes_help);
+        }
+
+        // 渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        // 动画
+        function animate(){
+            orbit.update();
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function draw(){
+            initRenderer();
+            initScene();
+            initCamera();
+            initLight();
+
+            addCubes();
+            axesHelp();
+            initOrbitControls();
+            
+            // render();
+            animate();
+            window.addEventListener("click",onMouseClick,false);
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>
