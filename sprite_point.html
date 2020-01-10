@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+
+        // webGL
+        let renderer = null,width=200,height=200;
+        function initRenderer(){
+            renderer = new  THREE.WebGLRenderer({
+                antilias:true, //抗锯齿
+                alpha:true
+            });
+            width = window.innerWidth - 17;
+            height = window.innerHeight;
+            renderer.setSize(width,height);
+            renderer.setClearColor("#000",1);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null,camera2 = null,far=400;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,width/height,1,far*3);
+            camera.position.set(0,0,far*2);
+            scene.add(camera);
+
+            // 产生相机辅助线
+            camera2 = new THREE.PerspectiveCamera(45,width/height,1,far);
+            camera2.position.set(0,0,far/2);
+            scene.add(camera2)
+        }
+
+        // 粒子-精灵
+        let sprite_points = null;
+        function spritePoints(){
+            let size = 10;
+            let material = new THREE.SpriteMaterial();
+            for(let x=-far/4;x<far/4;x+=size){
+                for(let y=-far/4;y<far/4;y+=size){
+                    let point = new THREE.Sprite(material);
+                    point.position.set(x,y,0);
+                    scene.add(point);
+                }
+            }
+        }
+
+        // 辅助线
+        let axes_helper = null,camera_hepler=null;
+        function initHelper(){
+            axes_helper = new THREE.AxesHelper(30);
+            scene.add(axes_helper);
+            camera_hepler = new THREE.CameraHelper(camera2);
+            scene.add(camera_hepler);
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        // 动画
+        function animate(){
+            orbit.update();
+            camera_hepler.update();
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function draw(){
+            initRenderer();
+            initScene();
+            initCamera();
+
+            spritePoints();
+
+            initHelper();
+            initOrbitControls();
+
+            // render();
+            animate();
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>
