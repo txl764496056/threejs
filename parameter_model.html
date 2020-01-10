@@ -89,12 +89,8 @@
             }
 
             var paraGeometry = new THREE.ParametricGeometry(paraFunction, 8, 8);
-            var paraMaterial = new THREE.MeshPhongMaterial({
-                                                size:50,
-                                                color:0x00ff00,
-                                                side:THREE.DoubleSide});
+            var paraMaterial = new THREE.MeshPhongMaterial();
             var paraMesh = new THREE.Mesh(paraGeometry, paraMaterial);
-            paraMesh.position.set(0, -2, -100);
             scene.add(paraMesh);
         }
 
