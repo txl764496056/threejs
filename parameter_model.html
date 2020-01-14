@@ -40,64 +40,84 @@
             scene.add(camera);
         }
 
-        // 平面
+        // 克莱因瓶
         let plane = null;
         function createPlane(){
-            let gemo = new THREE.ParametricGeometry(function(u,v,target){
-                let x = u*10;
-                let y = 0 ;
-                let z = v*10;
-                target.set(x,y,z);
-                // return new THREE.Vector3(x,y,z);
-            },8,8);
-            
-            // 创建法向量
-            // let meshMaterial = new THREE.MeshNormalMaterial({
-            //     flatShading:THREE.flatShading,
-            //     transparent:true,
-            //     opacity:0.9
-            // })
+            let geom = new THREE.ParametricGeometry(function(u,v,target){
+                u *= Math.PI;
+                v *= 2 * Math.PI;
 
-            // 创建线框纹理
-            // let wireFrameMat = new THREE.MeshBasicMaterial();
-            // wireFrameMat.wireframe = true;
+                u = u * 2;
+                var x, y, z;
+                if ( u < Math.PI ) {
+
+                    x = 3 * Math.cos( u ) * ( 1 + Math.sin( u ) ) + ( 2 * ( 1 - Math.cos( u ) / 2 ) ) * Math.cos( u ) * Math.cos( v );
+                    z = - 8 * Math.sin( u ) - 2 * ( 1 - Math.cos( u ) / 2 ) * Math.sin( u ) * Math.cos( v );
+
+                } else {
+
+                    x = 3 * Math.cos( u ) * ( 1 + Math.sin( u ) ) + ( 2 * ( 1 - Math.cos( u ) / 2 ) ) * Math.cos( v + Math.PI );
+                    z = - 8 * Math.sin( u );
+
+                }
+
+                y = - 2 * ( 1 - Math.cos( u ) / 2 ) * Math.sin( v );
+
+                target.set(x*5,y*5,z*5);
+            },16,16);
 
             // 创建模型
-            // plane = THREE.SceneUtils.createMultiMaterialObject(gemo,[meshMaterial,wireFrameMat])
-            let material = new THREE.MeshBasicMaterial({color:"#00ffaa"});
-            plane = new THREE.Mesh(gemo,material);
+            let material1 = new THREE.MeshLambertMaterial({
+                color:"#aaaaaa",
+                wireframe:true,
+                side:THREE.DoubleSide
+            });
 
-            scene.add(plane);
-            
-            // 测试
+            // plane = new THREE.Mesh(gemo,material);
+            // scene.add(plane);
 
-            /* let gemo2 = new THREE.BoxGeometry(50,50,50);
-            let material2 = new THREE.MeshBasicMaterial({color:"#660099"});
-            let box = new THREE.Mesh(gemo2,material2);
-            scene.add(box); */
-        }
+            let material2 = new THREE.MeshPhongMaterial({
+                color:"#aa00ff",
+                side:THREE.DoubleSide
+            });
 
+            // 多种材质
+            let materials = [material1,material2];
+            var group = new THREE.Group();
 
-        function test(){
-            var paraFunction = function (a, b,target) {
-                var x = -5 + 5 * a;
-                var y = -5 + 5 * b;
-                var z = (Math.sin(a * Math.PI) + Math.sin(b * Math.PI)) * -7;
+            for ( var i = 0, l = materials.length; i < l; i ++ ) {
 
-                target.set(x,y,z)
+                group.add( new THREE.Mesh( geom, materials[ i ] ) );
 
             }
 
-            var paraGeometry = new THREE.ParametricGeometry(paraFunction, 8, 8);
-            var paraMaterial = new THREE.MeshPhongMaterial();
-            var paraMesh = new THREE.Mesh(paraGeometry, paraMaterial);
-            scene.add(paraMesh);
+            scene.add(group);
+            
+        }
+
+        // 光
+        let light = null;
+        function initLight(){
+            light = new THREE.DirectionalLight("#ffffff",0.6);
+            light.position.set(200,200,200);
+            scene.add(light);
+
+            light2 = new THREE.AmbientLight("#ffffff",0.5);
+            light.position.set(0,400,200);
+            scene.add(light2);
         }
 
         // 交互
         let orbit = null;
         function initOrbitControls(){
             orbit = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 辅助线-坐标
+        let axes_help = null;
+        function help(){
+            axes_help = new THREE.AxesHelper(30);
+            scene.add(axes_help);
         }
 
         // 渲染
@@ -115,11 +135,13 @@
             initRenderer();
             initScene();
             initCamera();
+            initLight();
 
-            // createPlane();
-            test();
+            createPlane();
+            // test();
 
             initOrbitControls();
+            help();
             
             animate();
         }
