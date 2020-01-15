@@ -66,33 +66,28 @@
                 target.set(x*5,y*5,z*5);
             },16,16);
 
-            // 创建模型
+            // 创建材质1
+            // MeshLambertMaterial
             let material1 = new THREE.MeshLambertMaterial({
                 color:"#aaaaaa",
                 wireframe:true,
                 side:THREE.DoubleSide
             });
-
-            // plane = new THREE.Mesh(gemo,material);
-            // scene.add(plane);
-
+            // 创建材质2  MeshPhongMaterial
             let material2 = new THREE.MeshPhongMaterial({
                 color:"#aa00ff",
-                side:THREE.DoubleSide
+                side:THREE.DoubleSide,
             });
 
             // 多种材质
             let materials = [material1,material2];
             var group = new THREE.Group();
-
             for ( var i = 0, l = materials.length; i < l; i ++ ) {
 
                 group.add( new THREE.Mesh( geom, materials[ i ] ) );
 
             }
-
             scene.add(group);
-            
         }
 
         // 光
