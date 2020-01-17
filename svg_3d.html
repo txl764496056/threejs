@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+       .tree-box{
+           display:none;
+       }
+       .icon-tree{
+           border:1px solid #ddd;
+       }
+       .btn-box{
+            position:fixed;
+            z-index:999;
+            left:0;
+            top:0;
+       }
+       .btn-box .btn{
+           background-color:rgba(255,255,255,0.9);
+           height:38px;
+           line-height:38px;
+           padding:0 10px;
+           margin:10px 5px;
+           border:none;
+           border-radius:4px;
+       }
+    </style>
+</head>
+<body>
+    <div class="btn-box">
+        <button class="btn" onclick="cancelAnimate()">停止旋转动画</button>
+        <button class="btn" onclick="startAnimate()">开始旋转动画</button>
+    </div>
+     <!-- svg-tree start -->
+     <div class="tree-box">
+        <svg t="1579084614934" class="icon-tree" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1995" xmlns:xlink="http://www.w3.org/1999/xlink" width="300" height="300"><defs><style type="text/css"></style></defs><path id="tree" d="M882.658743 750.858267L715.810906 576.000437H783.998839c42.033959 0 63.743938-50.413951 34.895966-80.95792L653.578967 320.000687H719.998902c41.755959 0 63.701938-49.937951 35.173966-80.661921l-207.999797-224.005781c-18.969981-20.42798-51.35195-20.45798-70.347932 0l-207.999797 224.005781C240.41137 269.938736 262.073349 320.000687 303.999308 320.000687h66.419935l-165.317838 175.04183C176.241433 525.602487 197.985412 576.000437 239.999371 576.000437h68.187933L141.329467 750.858267C112.261495 781.310237 133.849474 832.000187 176.049433 832.000187H415.999199c0 65.561936-22.375978 98.519904-67.989934 135.011869C324.449288 985.860037 337.827275 1024 367.999246 1024h287.999718c30.171971 0 43.551957-38.137963 19.989981-56.987944-39.535961-31.627969-67.983934-63.329938-67.989934-134.991869V832.000187h239.939766c42.099959 0 63.857938-50.617951 34.719966-81.14192z" fill="" p-id="1996"></path></svg>
+    </div>
+    <!-- svg-tree end -->
+    <script src="js/three.js"></script>
+    <script src="js/d3-threeD.js"></script>
+    <!-- 交互 -->
+    <script src="js/OrbitControls.js"></script>
+    <!-- 用户操作可视化界面 -->
+    <script src="js/dat.gui.min.js"></script>
+    <script>
+        // WebGL
+        let renderer=null,width=200,height=200;
+        function initRenderer(){
+            renderer = new THREE.WebGLRenderer({
+                antilias:true,
+                alpha:true
+            });
+            width = window.innerWidth// - 17;
+            height = window.innerHeight;
+            renderer.setSize(width,height);
+            renderer.setClearColor("#666",1);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        //场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null,far=600;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,width/height,1,far);
+            camera.position.set(0,0,far/2);
+            scene.add(camera);
+        }
+
+        // 树
+        let tree = null;
+        function createTree({steps,depth,bevelEnabled,bevelThickness,bevelSize,bevelOffset,bevelSegments}={steps:2,depth:5,bevelEnabled:true,bevelThickness:3,bevelSize:5,bevelOffset:0,bevelSegments:2}){
+            let svg_string = document.querySelector("#tree").getAttribute("d");
+            // 字符串svg_string转路径对象
+            let svg_path = transformSVGPathExposed(svg_string);
+            // 处理处理数据，将对象坐标转换成以世界坐标系为中点
+            svg_path = processSvgPath(svg_path);
+            let shape = new THREE.ExtrudeGeometry(svg_path,{
+                steps, //用于细分拉伸的样条段数量-z轴可见
+                depth, //拉伸形状的深度 - z-轴可见
+                bevelEnabled, //打开斜面 - 棱角处可见
+                bevelThickness, // 在原来的形状里面弄多深的斜面 - 斜面厚度z轴可见
+                bevelSize, //斜面离形状轮廓的距离 - 正面可见（垂直于x轴的视线）
+                bevelOffset,  //从斜面开始的形状轮廓的距离 - 正面可见（垂直于x轴的视线）
+                bevelSegments //斜面层的数量 - 正面可见（垂直于x轴的视线）
+            });
+            // 多种材质
+            let material1 = new THREE.MeshNormalMaterial({
+                side:THREE.DoubleSide,
+                transparent:true,
+                opacity:0.8
+            })
+            let material2 = new THREE.MeshBasicMaterial({
+                wireframe:true
+            });
+            let materials = [material1,material2];
+            tree = new THREE.Group();
+            for(let i=0;i<materials.length;i++){
+                tree.add(new THREE.Mesh(shape,materials[i]));
+            }
+            scene.add(tree);
+
+            // 测试-模型
+            /* let geom = new THREE.BoxGeometry(50,50,50);
+            let material = new THREE.MeshBasicMaterial({color:"#00ff99"});
+            let box = new THREE.Mesh(geom,material);
+            scene.add(box); */
+        }
+
+        // 转换svg对象坐标系，转换为世界坐标系的点
+        function processSvgPath(svg){
+            let patt = /^v\d$/;
+            let winW = window.innerWidth;
+            let winH = window.innerHeight;
+            for(let i=0;i<svg.length;i++){
+                let curves = svg[i].curves;
+                for(let j=0;j<curves.length;j++){
+                    for(let [key,value] of Object.entries(curves[j])){
+                        if(patt.test(key)){
+                            let point = curves[j][key];
+                            let size = 40; //大小
+                            /**
+                            * 注意：svg图形tree的虚拟坐标是正方形，则计算时也要按照1:1计算出世界坐标系
+                            * 说明：按照世界坐标系比例，应该是point.x/winW，但是我了图片不变形，用winH
+                            * 目的：也可以都使用 point.y/winW  point.x/winW,目的保证1:1即可
+                            * 其他方法，将画布设置width=height也可以
+                            */
+                            let x = (point.x/(winH))*2 -1;  //世界坐标系转换，值范围[-1,1]
+                            let y = (1 - (point.y/winH)*2); //世界坐标系转换，值范围[-1,1]
+                            curves[j][key] = {
+                                x:x*size,
+                                y:y*size
+                            }
+                        }
+                    }
+                }
+                svg[i].curves = curves;
+            }
+            return svg;
+        }
+
+        // 爱心模型-绘制-不是svg转换而成
+        function heartModel(){
+            var x = 0, y = 0;
+            var heartShape = new THREE.Shape();
+
+            heartShape.moveTo( x + 5, y + 5 );
+            heartShape.bezierCurveTo( x + 5, y + 5, x + 4, y, x, y );
+            heartShape.bezierCurveTo( x - 6, y, x - 6, y + 7,x - 6, y + 7 );
+            heartShape.bezierCurveTo( x - 6, y + 11, x - 3, y + 15.4, x + 5, y + 19 );
+            heartShape.bezierCurveTo( x + 12, y + 15.4, x + 16, y + 11, x + 16, y + 7 );
+            heartShape.bezierCurveTo( x + 16, y + 7, x + 16, y, x + 10, y );
+            heartShape.bezierCurveTo( x + 7, y, x + 5, y + 5, x + 5, y + 5 );
+
+            var geometry = new THREE.ShapeGeometry( heartShape );
+            var material = new THREE.MeshBasicMaterial( { color: 0x006600 } );
+            var mesh = new THREE.Mesh( geometry, material ) ;
+            scene.add( mesh );
+        }
+
+        // 辅助线
+        let axes_help = null;
+        function initHelp(){
+            axes_help = new THREE.AxesHelper(100);
+            scene.add(axes_help);
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 可视化操作
+        let datGui = null;
+        function initDatGui(){
+            let gui = {
+                steps:1,
+                depth:2,
+                bevelEnabled:true,
+                bevelThickness:1,
+                bevelSize:2,
+                bevelOffset:0,
+                bevelSegments:2,
+                redraw(){
+                    if(tree){
+                        scene.remove(tree);
+                    }
+                    createTree({
+                        steps:gui.steps,
+                        depth:gui.depth,
+                        bevelEnabled:gui.bevelEnabled,
+                        bevelThickness:gui.bevelThickness,
+                        bevelSize:gui.bevelSize,
+                        bevelOffset:gui.bevelOffset,
+                        bevelSegments:gui.bevelSegments,
+                    });
+                }
+            }
+
+            datGui = new dat.GUI();
+
+            datGui.add(gui,"steps",0,10).onChange(gui.redraw);
+            datGui.add(gui,"depth",0,30).onChange(gui.redraw);
+            datGui.add(gui,"bevelEnabled").onChange(gui.redraw);
+            datGui.add(gui,"bevelThickness",0,10).onChange(gui.redraw);
+            datGui.add(gui,"bevelSize",0,10).onChange(gui.redraw);
+            datGui.add(gui,"bevelOffset",0,10).onChange(gui.redraw);
+            datGui.add(gui,"bevelSegments",0,10).onChange(gui.redraw);
+
+            gui.redraw();
+        }
+        
+        // 渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        // 动画1
+        let animateId = null;
+        function animate(){
+            tree.rotation.y += 0.01;
+            orbit.update();
+            render();
+            animateId = requestAnimationFrame(animate);
+        }
+
+        // 动画2
+        let animateId2 = null;
+        function animate2(){
+            orbit.update();
+            render();
+            animateId2 = requestAnimationFrame(animate2);
+        }
+
+        function draw(){
+            initRenderer();
+            initScene();
+            initCamera();
+
+            // createTree();
+            // heartModel();
+            initDatGui();
+
+            initHelp();
+            initOrbitControls();
+
+            // render();
+            animate();
+        }
+
+        draw();
+
+        // 结束旋转动画
+        function cancelAnimate(){
+            cancelAnimationFrame(animateId);
+            animate2();
+        }
+
+        // 开始旋转动画
+        function startAnimate(){
+            cancelAnimationFrame(); //先清除一次，避免首次点击的是开始动画，会出现两个动画在执行
+            cancelAnimationFrame(animateId2);
+            animate();
+        }
+    </script>
+</body>
+</html>

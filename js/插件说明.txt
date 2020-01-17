@@ -1,0 +1,12 @@
+ColladaLoader.js ： 导入Collada(.dae)格式的模型
+
+d3-threeD.js : 将svg的path字符串转换为路径对象（shape）;
+
+dat.gui.min.js : 可视化界面，用户操作，修改参数
+
+GLTFLoader.js ： gltf模型加载器
+
+OrbitControls.js ： 交互插件，缩放、旋转等
+
+stats.min.js ： 性能监听
+
