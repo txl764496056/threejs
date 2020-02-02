@@ -10,3 +10,4 @@ OrbitControls.js ： 交互插件，缩放、旋转等
 
 stats.min.js ： 性能监听
 
+git test;
