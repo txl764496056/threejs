@@ -21,49 +21,56 @@
             font-size:20px;
             margin-bottom:10px;
         }
-        .nav-list{
+        .nav-list .item{
+            background-color:rgb(236, 236, 236);
+            margin-bottom:10px;
+        }
+
+        .nav-list a {
+            text-decoration: none;
+            font-size: 14px;
+            color:#333;
+            letter-spacing: 1px;
+        }
+
+        .nav-list1{
             margin-bottom:10px;
             display:flex;
             flex-wrap:wrap;
             justify-content: space-between;
-            
         }
-        .nav-list1 a,.nav-list2 .item .left,.nav-list2 .item .right{
-            text-decoration: none;
-            font-size: 14px;
-            display:inline-block;
-            background-color:rgb(236, 236, 236);
-            color:#333;
-            padding:8px 10px;
-            margin-bottom:10px;
+        .nav-list1 a{
             width:48%;
-            letter-spacing: 1px;
+            padding:8px 10px;
         }
-        .nav-list1 a:hover,.nav-list2 .item .left:hover{
+        
+        /* ,.nav-list2 .item .left,.nav-list2 .item .right */
+        .nav-list1 a:hover,.nav-list2 .item .file-path:hover{
             color:#000;
             font-weight: bold;
             background-color:rgb(182, 182, 182);
         }
         .nav-list2 .item{
             display:flex;
-            align-items: center;
+            align-items: stretch;
             justify-content: center;
+            flex-direction: column;
             width:100%;
             flex-wrap: wrap;
-        }
-        .nav-list2 .item:last-of-type{
-            margin-right:auto;
-        }
-        .nav-list2 .item .right,.nav-list2 .item .right:hover{
+            margin-bottom:10px;
             font-size:12px;
-            margin:auto;
-            background-color:transparent;
         }
 
-        .nav-list2 .item .left p{font-size:12px;}
+        .nav-list2 .item .file-path{
+            padding:10px;
+            text-align:center;
+            font-size:inherit;
+        }
 
-        .nav-list2 .item .right.blue{
-            color:#0000ff;
+        .nav-list2 .item .full-screen-view{
+            color:#4646dd;
+            font-size:inherit;
+            padding:0 10px 10px 10px;
         }
         
         .iframe-view1{
@@ -78,70 +85,75 @@
         <div class="left">
             <h2 class="title">原理分析：three.js基础</h2>
             <div class="nav-list nav-list1">
-                <a href="rotate_cube.html" target="view1">旋转立方体</a>
-                <a href="point.html" target="view1">创建点</a>
-                <a href="line.html" target="view1">创建线</a>
-                <a href="shape.html" target="view1">创建面</a>
-                <a href="sprite.html" target="view1">精灵</a>
-                <a href="bone.html" target="view1">骨骼</a>
-                <a href="path.html" target="view1">路径</a>
-                <a href="rotate_center.html" target="view1">旋转中心</a>
-                <a href="layers.html" target="view1">设置层次</a>
+                <a class="item" href="rotate_cube.html" target="view1">旋转立方体</a>
+                <a class="item" href="point.html" target="view1">创建点</a>
+                <a class="item" href="line.html" target="view1">创建线</a>
+                <a class="item" href="shape.html" target="view1">创建面</a>
+                <a class="item" href="sprite.html" target="view1">精灵</a>
+                <a class="item" href="bone.html" target="view1">骨骼</a>
+                <a class="item" href="path.html" target="view1">路径</a>
+                <a class="item" href="rotate_center.html" target="view1">旋转中心</a>
+                <a class="item" href="layers.html" target="view1">设置层次</a>
             </div>
             <h2 class="title">csdn专注前端30年，博客教程</h2>
             <div class="nav-list nav-list2">
                 <div class="item">
-                    <a class="left" href="snow.html" target="view1">下雪</a>
-                    <a class="right blue" href="snow2.html" target="_blank">新窗口打开，可操作图形用户界面工具</a>
+                    <a class="file-path" href="snow.html" target="view1">下雪</a>
+                    <a class="full-screen-view" href="snow2.html" target="_blank">新窗口打开，可操作图形用户界面工具</a>
                 </div>
                 <div class="item">
-                    <a class="left" href="rain.html" target="view1">下雨</a>
-                    <a class="right blue" href="rain.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                    <a class="file-path" href="rain.html" target="view1">下雨</a>
+                    <a class="full-screen-view" href="rain.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a class="left" href="format_point.html" target="view1">
+                    <a class="file-path" href="format_point.html" target="view1">
                         样式化粒子
-                        <p>PointsMaterial</p>
+                        <span>PointsMaterial</span>
                     </a>
-                    <a class="right blue" href="format_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                    <a class="full-screen-view" href="format_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a class="left" href="manager_point.html" target="view1">
+                    <a class="file-path" href="manager_point.html" target="view1">
                         管理粒子
-                        <p>Points</p>
+                        <span>Points</span>
                     </a>
-                    <a class="right blue" href="manager_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                    <a class="full-screen-view" href="manager_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a href="model_click.html" class="left" target="view1">
+                    <a href="model_click.html" class="file-path" target="view1">
                         模型交互点击
-                        <p>Raycaster</p>
+                        <span>Raycaster</span>
                     </a>
-                    <a class="right blue" href="model_click.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                    <a class="full-screen-view" href="model_click.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a href="sprite_point.html" class="left" target="view1">
+                    <a href="sprite_point.html" class="file-path" target="view1">
                         精灵
-                        <p>sprite</p>
+                        <span>sprite</span>
                     </a>
-                    <a class="right blue" href="sprite_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                    <a class="full-screen-view" href="sprite_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a href="parameter_model.html" class="left" target="view1" style="width:100%;">
+                    <a href="parameter_model.html" class="file-path" target="view1">
                         参数化几何模型 (一个模型多种材质)
-                        <p>ParametricGeometry</p>
+                        <span>ParametricGeometry</span>
                     </a>
                 </div>
                 <div class="item">
-                    <a href="svg_3d.html" class="left" target="view1" style="width:100%;">
+                    <a href="svg_3d.html" class="file-path" target="view1">
                         拉伸svg为三维图形
-                        <p>ExtrudeGeometry</p>
+                        <span>ExtrudeGeometry</span>
                     </a>
-                    <a class="right blue" href="svg_3d.html" target="_blank" style="width:100%;">新窗口打开，可操作图形用户界面</a>
+                    <a class="full-screen-view" href="svg_3d.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                </div>
+                <div class="item">
+                    <a href="stretch_geometry_pipeline.html" target="view1" class="file-path">
+                        拉伸几何体-管道
+                    </a>
                 </div>
             </div>
         </div>
-        <iframe src="svg_3d.html" class="iframe-view1" name="view1" frameborder="0"></iframe>
+        <iframe src="stretch_geometry_pipeline.html" class="iframe-view1" name="view1" frameborder="0"></iframe>
     </div>
 </body>
 </html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>拉伸几何体</title>
+    <link rel="stylesheet" href="css/base.css">
+    <style>
+        .intro{
+            padding:10px;
+            background-color:rgb(255, 213, 213);
+            font-size:14px;
+            position:fixed;
+            z-index:999;
+            left:0;
+            top:0;
+            height:40px;
+        }
+    </style>
+</head>
+<body>
+     <div class="intro">THREE.TubeGeometry沿着1条三维的线（THREE.CatmullRomCurve3）拉伸出一根管</div>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+
+        let renderer = null,winH=0,winW=0;
+        function initRenderer(){
+            renderer = new THREE.WebGLRenderer();
+            winH = window.innerHeight;
+            winW = window.innerWidth - 13;
+            renderer.setSize(winW,winH);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,winW/winH,1,40);
+            camera.position.z = 30;
+            scene.add(camera);
+            
+        }
+
+        //添加元素-拉伸几何体
+        let cube1 = null;
+        function addCube(){
+            // 顶点
+            let curve = new THREE.CatmullRomCurve3([
+                new THREE.Vector3(3,6,3),
+                new THREE.Vector3(-5,0,0),
+                new THREE.Vector3(3,-6,5)
+            ]);
+            // 管道几何体：(path,segments,radius,radiusSegments,colosed)
+            // path:路径，segments:分段数，radius：截面半径，
+            // radiusSegments:截面分段,colosed是否连接首尾：false不连接、true连接
+            let geometry = new THREE.TubeGeometry(curve,50,1,10,false);
+            let material = new THREE.MeshPhongMaterial({color:"#ff00ff",side:THREE.DoubleSide});
+            let cube1 = new THREE.Mesh(geometry,material);
+            scene.add(cube1);
+        }
+
+        // 光
+        let light1 = null,light2=null;
+        function initLight(){
+            light1 = new THREE.AmbientLight("#ffffff",0.5);
+            light1.position.set(50,50,50);
+            light2 = new THREE.DirectionalLight("#ffffff",0.5);
+            light2.position.set(50,50,50);
+            scene.add(light1,light2);
+        }
+
+        // 交互操作
+        let orbitControls = null
+        function initOrbitControls(){
+            orbitControls = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        // 交互、动画
+        function animate(){
+            orbitControls.update();
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function draw(){
+            initRenderer();
+            initScene();
+            initCamera();
+            initLight();
+            addCube();
+
+            initOrbitControls();
+
+            animate();
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>
