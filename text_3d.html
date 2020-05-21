@@ -7,6 +7,127 @@
     <link rel="stylesheet" href="css/base.css">
 </head>
 <body>
-    
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+
+        // 初始化
+        let renderer,winW=0,winH=0;
+        function initRenerder(){
+            renderer = new THREE.WebGLRenderer();
+            winW = window.innerWidth;
+            winH = window.innerHeight;
+            renderer.setSize(winW,winH);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,winW/winH,1,100);
+            camera.position.z = 50;
+            scene.add(camera);
+        }
+        
+        // 添加元素
+        function addCube(){
+            // let geometry = new THREE.BoxGeometry(2,2,2);
+            // let material = new THREE.MeshBasicMaterial({color:"#9900aa"});
+            // let box = new THREE.Mesh(geometry,material);
+            // box.position.set(2,5,10)
+            // scene.add(box);
+
+            let loader = new THREE.FontLoader();
+            let geometry2 = null;
+            loader.load("font/helvetiker_regular_bold.typeface.json",function(font){
+                console.log(font)
+                geometry2 = new THREE.TextGeometry("618",{
+                    font:font,
+                    size:8,
+                    height:1,
+                    curveSegments:6,
+                    bevelEnabled:true,
+                    bevelThickness:0.2,
+                    bevelSize:0,
+                    bevelSegments:1
+                });
+                // 居中----------------------------------模型居中显示
+                geometry2.center();
+                let material2 = new THREE.MeshNormalMaterial({
+                    color:"#993399",
+                    // side:THREE.DoubleSide,
+                    // transparent:0.3
+                });
+                let text = new THREE.Mesh(geometry2,material2);
+                text.rotation.x = -0.4;
+                
+                scene.add(text);
+            });
+
+        }
+
+        // 辅助线
+        function initHelper(){
+            let helper = new THREE.AxisHelper(30);
+            scene.add(helper);
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,render.domElement);
+        }
+
+        // 光
+        function initLight(){
+            
+            let light1 = new THREE.DirectionalLight("#ffffff",0.5);
+            light1.position.set(50,50,50);
+
+            let light2 = new THREE.AmbientLight("#ffffff",0.7);
+            light2.position.set(0,50,0);
+
+            scene.add(light1,light2);
+
+        }
+
+        // 渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+
+        // 动画
+        function animate(){
+            orbit.update();
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        function draw(){
+            initRenerder();
+            initScene();
+            initCamera();
+
+            initHelper();
+            
+
+            addCube();
+            initLight();
+            initOrbitControls();
+
+            // render();
+            animate();
+        }
+
+        draw();
+
+    </script>
 </body>
 </html>
