@@ -37,24 +37,59 @@
 
         // 添加元素
         function initLathe(){
-            let geometry = new THREE.BoxGeometry(5,5,5);
-            let material = new THREE.MeshPhongMaterial({color:"#9900aa"});
-            let box = new THREE.Mesh(geometry,material);
-            scene.add(box);
+            // 测试模型
+            // let geometry = new THREE.BoxGeometry(5,5,5);
+            // let material = new THREE.MeshPhongMaterial({color:"#9900aa"});
+            // let box = new THREE.Mesh(geometry,material);
+            // scene.add(box);
+            
+            // 花瓶模型
+            let points = [
+                new THREE.Vector3(-2.3,4.2,0),
+                new THREE.Vector3(-2.9,4.4,0),
+                new THREE.Vector3(-2.85,4.75,0),
+                new THREE.Vector3(-2.75,5,0),
+                new THREE.Vector3(-2.3,5.25,0),
+
+                new THREE.Vector3(-2,5,0),
+                new THREE.Vector3(-1.3,4,0),
+                new THREE.Vector3(-1.1,3,0),
+                new THREE.Vector3(-1,2,0),
+                new THREE.Vector3(-1.75,0,0),
+                new THREE.Vector3(-2.7,-1,0),
+                new THREE.Vector3(-3.5,-2,0),
+                new THREE.Vector3(-4,-3,0),
+                new THREE.Vector3(-4.25,-4,0),
+                new THREE.Vector3(-4.2,-5,0),
+                new THREE.Vector3(-3.5,-6,0),
+                new THREE.Vector3(-2.5,-6.5,0),
+                new THREE.Vector3(0,-6.5,0) //封住底部
+            ];
+            let geometry2 = new THREE.LatheGeometry(points,60,Math.PI*0,Math.PI*2);
+            let material2 = new THREE.MeshPhongMaterial({
+                color:"#996633",
+                side:THREE.DoubleSide
+            });
+            let lathe = new THREE.Mesh(geometry2,material2);
+            scene.add(lathe);
         }         
         
         //光
         function initLight(){
             // 平行光
-            let light1 = new THREE.DirectionalLight("#ffffff");
+            let light1 = new THREE.DirectionalLight("#ffffff",0.9);
             light1.position.set(-30,50,0);
             // 环境光
             let light2 = new THREE.AmbientLight("#ffffff");
             light2.position.set(-20,50,0);
-            scene.add(light1,light2);
+            // 平行光
+            let light3 = new THREE.DirectionalLight("#ffffff",0.8);
+            light3.position.set(30,-50,0);
+
+            scene.add(light1,light2,light3);
         }
         
-        //  渲染
+        // 渲染
         function render(){
             renderer.render(scene,camera);
         }
