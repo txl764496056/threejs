@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/base.css">
+</head>
+<body>
+
+    <div class="intro">通过THREE.ConvexGeometry，我们可以围绕一组点创建一个凸包。所谓凸包就是包围这组点的最小图形。也就是所有的点都在当前模型的体内，而且当前图形还是实现的体积最小的一个模型。</div>
+
+    <script src="js/three.js"></script>
+    <script src="js/ConvexGeometry.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+
+        // 初始化
+        let renderer=null,winW=0,winH=0;
+        function initWebGLRenderer(){
+            renderer = new THREE.WebGLRenderer();
+            winW = window.innerWidth;
+            winH = window.innerHeight;
+            renderer.setSize(winW,winH);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,winW/winH,1,100);
+            camera.position.z = 50;
+            scene.add(camera);
+        }
+
+        // 添加模型
+        function addModel(){
+            let points = [];
+            let num = 15;
+
+            // 生成顶点
+            for(let i=0;i<num;i++){
+                points.push(new THREE.Vector3(10-20*Math.random(),10-20*Math.random(),10-20*Math.random()));
+            };
+
+            // 生成球模型（很小的球）
+            let material1 = new THREE.MeshBasicMaterial({color:"#ff0099"});
+            points.forEach(function(point){
+                let gemo = new THREE.SphereGeometry(0.1);
+                let mesh = new THREE.Mesh(gemo,material1);
+                mesh.position.copy(point);
+                scene.add(mesh);
+            });
+
+            // 根据这些点生成高级几何体
+            let convex_geom = new ConvexGeometry(points);
+            let material2 = new THREE.MeshNormalMaterial({
+                color:"#006699",
+                transparent:true,
+                opacity:0.5
+            });
+            let material3 = new THREE.MeshBasicMaterial({
+                wireframe:true
+            })
+            let convex = new THREE.Mesh(convex_geom,[material2,material3]);
+            scene.add(convex_geom);
+
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 辅助
+        function initHelper(){
+            helper = new THREE.AxesHelper(30);
+            scene.add(helper);
+        }
+
+        // 渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        //动画
+        function animate(){
+            render();
+            orbit.update();
+            requestAnimationFrame(animate);
+        }
+
+        // 绘制
+        function draw(){
+            initWebGLRenderer();
+            initScene();
+            initCamera();
+
+            initOrbitControls();
+            initHelper();
+
+            addModel();
+
+            animate();
+        }
+
+        draw();
+
+    </script>
+</body>
+</html>
