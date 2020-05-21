@@ -35,8 +35,9 @@
             scene.add(camera);
         }
         
-        // 添加元素
+        // 添加模型
         function addCube(){
+            // 测试模型
             // let geometry = new THREE.BoxGeometry(2,2,2);
             // let material = new THREE.MeshBasicMaterial({color:"#9900aa"});
             // let box = new THREE.Mesh(geometry,material);
@@ -51,11 +52,11 @@
                     font:font,
                     size:8,
                     height:1,
-                    curveSegments:6,
-                    bevelEnabled:true,
-                    bevelThickness:0.2,
-                    bevelSize:0,
-                    bevelSegments:1
+                    // curveSegments:6,
+                    // bevelEnabled:true,
+                    // bevelThickness:0.2,
+                    // bevelSize:0,
+                    // bevelSegments:1
                 });
                 // 居中----------------------------------模型居中显示
                 geometry2.center();
@@ -86,10 +87,10 @@
 
         // 光
         function initLight(){
-            
+            // 平行光
             let light1 = new THREE.DirectionalLight("#ffffff",0.5);
             light1.position.set(50,50,50);
-
+            // 环境光
             let light2 = new THREE.AmbientLight("#ffffff",0.7);
             light2.position.set(0,50,0);
 

@@ -8,5 +8,87 @@
 </head>
 <body>
     <div class="intro">THREE.LatheGeometry允许你从一条光滑的曲线创建图形。此曲线是由多个点定义，通常称作样条曲线。然后再绕y轴旋转，就生成了一组车床类型的几何体模型</div>
+    <script src="js/three.js"></script>
+    <script src="js/OrbitControls.js"></script>
+    <script>
+        // 初始化
+        let renderer = null,winW=0,winH=0;
+        function  initRenderer(){
+            renderer = new THREE.WebGLRenderer();
+            winW = window.innerWidth;
+            winH = window.innerHeight;
+            renderer.setSize(winW,winH);
+            document.body.appendChild(renderer.domElement);
+        }
+
+        // 场景
+        let scene = null;
+        function initScene(){
+            scene = new THREE.Scene();
+        }
+
+        // 相机
+        let camera = null;
+        function initCamera(){
+            camera = new THREE.PerspectiveCamera(45,winW/winH,1,100);
+            camera.position.set(0,0,50);
+            scene.add(camera);
+        }
+
+        // 添加元素
+        function initLathe(){
+            let geometry = new THREE.BoxGeometry(5,5,5);
+            let material = new THREE.MeshPhongMaterial({color:"#9900aa"});
+            let box = new THREE.Mesh(geometry,material);
+            scene.add(box);
+        }         
+        
+        //光
+        function initLight(){
+            // 平行光
+            let light1 = new THREE.DirectionalLight("#ffffff");
+            light1.position.set(-30,50,0);
+            // 环境光
+            let light2 = new THREE.AmbientLight("#ffffff");
+            light2.position.set(-20,50,0);
+            scene.add(light1,light2);
+        }
+        
+        //  渲染
+        function render(){
+            renderer.render(scene,camera);
+        }
+
+        // 交互
+        let orbit = null;
+        function initOrbitControls(){
+            orbit = new THREE.OrbitControls(camera,renderer.domElement);
+        }
+
+        // 动画
+        function animate(){
+            orbit.update();
+            render();
+            requestAnimationFrame(animate);
+        }
+
+        // 绘制
+        function draw(){
+            initRenderer();
+            initScene();
+            initCamera();
+            initLight();
+
+            initOrbitControls();
+
+            initLathe();
+
+            
+
+            animate();
+        }
+
+        draw();
+    </script>
 </body>
 </html>
