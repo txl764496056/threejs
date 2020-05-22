@@ -8,7 +8,7 @@
 </head>
 <body>
 
-    <div class="intro">通过THREE.ConvexGeometry，我们可以围绕一组点创建一个凸包。所谓凸包就是包围这组点的最小图形。也就是所有的点都在当前模型的体内，而且当前图形还是实现的体积最小的一个模型。</div>
+    <div class="intro">通过THREE.ConvexGeometry，我们可以围绕一组点创建一个凸包。所谓凸包就是包围这组点的最小图形。也就是所有的点都在当前模型的体内，而且当前图形还是<b>实现的体积最小</b>的一个模型。</div>
 
     <script src="js/three.js"></script>
     <script src="js/ConvexGeometry.js"></script>
@@ -58,18 +58,24 @@
                 scene.add(mesh);
             });
 
-            // 根据这些点生成高级几何体
-            let convex_geom = new ConvexGeometry(points);
-            let material2 = new THREE.MeshNormalMaterial({
-                color:"#006699",
+            // 根据这些点---生成高级几何体
+            //最新的有些已经不需要THREE,直接new ConvexGeometry(points)
+            let convex_geom = new THREE.ConvexGeometry(points);
+            
+            // 多种材质
+            let material2 = new THREE.MeshBasicMaterial({
                 transparent:true,
-                opacity:0.5
+                opacity:0.3,
+                color:"#990099",
+                side:THREE.DoubleSide
             });
-            let material3 = new THREE.MeshBasicMaterial({
-                wireframe:true
-            })
-            let convex = new THREE.Mesh(convex_geom,[material2,material3]);
-            scene.add(convex_geom);
+            let convex = new THREE.Mesh(convex_geom,material2);
+            
+            let material3 = new THREE.MeshBasicMaterial();
+            material3.wireframe = true;
+            let convex2 = new THREE.Mesh(convex_geom,material3);
+
+            scene.add(convex,convex2);
 
         }
 

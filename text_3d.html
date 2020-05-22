@@ -61,18 +61,21 @@
                 // 居中----------------------------------模型居中显示
                 geometry2.center();
                 let material2 = new THREE.MeshNormalMaterial({
-                    color:"#993399",
                     side:THREE.DoubleSide,
-                    transparent:0.3
+                    transparent:true,
+                    opacity:0.3
                 });
                 let material3 = new THREE.MeshBasicMaterial({
                     wireframe:true
                 });
                 // 材质接收数组
-                let text = new THREE.Mesh(geometry2,[material2,material3]);
+                let text = new THREE.Mesh(geometry2,material2);
                 text.rotation.x = -0.4;
+
+                let text2 = new THREE.Mesh(geometry2,material3);
+                text2.rotation.x = -0.4;
                 
-                scene.add(text);
+                scene.add(text,text2);
             });
 
         }
