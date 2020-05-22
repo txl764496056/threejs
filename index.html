@@ -6,10 +6,23 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <link rel="stylesheet" href="css/base.css">
+    <style>
+        .red-btn{
+            background-image:linear-gradient(180deg,rgb(250, 78, 78),rgb(100, 20, 20));
+            color:#ffffff;
+            display: block;
+            padding:10px;
+            text-align:center;
+            text-decoration: none;
+            border-radius:4px;
+            margin-top:10px;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
         <div class="left">
+            <div class="red-btn">es6_vison文件夹下：有es6版本</div>
             <h2 class="title">原理分析：three.js基础</h2>
             <div class="nav-list nav-list1">
                 <a class="item" href="rotate_cube.html" target="view1">旋转立方体</a>
@@ -25,71 +38,93 @@
             <h2 class="title">csdn专注前端30年，博客教程</h2>
             <div class="nav-list nav-list2">
                 <div class="item">
-                    <a class="file-path" href="snow.html" target="view1">下雪</a>
-                    <a class="full-screen-view" href="snow2.html" target="_blank">新窗口打开，可操作图形用户界面工具</a>
-                </div>
-                <div class="item">
-                    <a class="file-path" href="rain.html" target="view1">下雨</a>
-                    <a class="full-screen-view" href="rain.html" target="_blank">新窗口打开，可操作图形用户界面</a>
-                </div>
-                <div class="item">
-                    <a class="file-path" href="format_point.html" target="view1">
-                        样式化粒子
-                        <span>PointsMaterial</span>
+                    <a class="file-path" target="view1" href="geometry_model.html">
+                        <span class="num">41</span>
+                        高级几何体模型ConvexGeometry(points)
                     </a>
-                    <a class="full-screen-view" href="format_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a class="file-path" href="manager_point.html" target="view1">
-                        管理粒子
-                        <span>Points</span>
+                    <a href="lathe_model.html" class="file-path" target="view1">
+                        <span class="num">42</span>
+                        高级车床模型LatheGeometry()，根据路径生成
                     </a>
-                    <a class="full-screen-view" href="manager_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a href="model_click.html" class="file-path" target="view1">
-                        模型交互点击
-                        <span>Raycaster</span>
-                    </a>
-                    <a class="full-screen-view" href="model_click.html" target="_blank">新窗口打开，可操作图形用户界面</a>
-                </div>
-                <div class="item">
-                    <a href="sprite_point.html" class="file-path" target="view1">
-                        精灵
-                        <span>sprite</span>
-                    </a>
-                    <a class="full-screen-view" href="sprite_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
-                </div>
-                <div class="item">
-                    <a href="parameter_model.html" class="file-path" target="view1">
-                        参数化几何模型 (一个模型多种材质)
-                        <span>ParametricGeometry</span>
+                    <a href="stretch_geometry_pipeline.html" target="view1" class="file-path">
+                        <span class="num">45</span> 
+                        拉伸几何体-管道
                     </a>
                 </div>
                 <div class="item">
                     <a href="svg_3d.html" class="file-path" target="view1">
+                        <span class="num">46</span> 
                         拉伸svg为三维图形
                         <span>ExtrudeGeometry</span>
                     </a>
                     <a class="full-screen-view" href="svg_3d.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a href="stretch_geometry_pipeline.html" target="view1" class="file-path">
-                        拉伸几何体-管道
+                    <a href="parameter_model.html" class="file-path" target="view1">
+                        <span class="num">47</span> 
+                        参数化几何模型克莱因瓶 (一个模型多种材质)
+                        <span>ParametricGeometry</span>
                     </a>
                 </div>
                 <div class="item">
-                    <a href="text_3d.html" class="file-path" target="view1" class="href">三维文本并居中,center()方法,多种材质</a>
+                    <a href="text_3d.html" class="file-path" target="view1" class="href">
+                        <span class="num">48</span> 
+                        三维文本并居中,center()方法,多种材质
+                    </a>
                 </div>
                 <div class="item">
-                    <a href="lathe_model.html" class="file-path" target="view1">车床模型LatheGeometry()，根据路径生成</a>
+                    <a href="sprite_point.html" class="file-path" target="view1">
+                        <span class="num">52</span> 
+                        精灵
+                        <span>sprite</span>
+                    </a>
+                    <a class="full-screen-view" href="sprite_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
                 <div class="item">
-                    <a class="file-path" target="view1" href="gemotry_model.html">高级几何体模型ConvexGeometry(points)</a>
+                    <a class="file-path" href="manager_point.html" target="view1">
+                        <span class="num">53</span> 
+                        管理粒子
+                        <span>Points</span>
+                    </a>
+                    <a class="full-screen-view" href="manager_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                </div>
+                <div class="item">
+                    <a class="file-path" href="format_point.html" target="view1">
+                        <span class="num">54</span> 
+                        样式化粒子
+                        <span>PointsMaterial</span>
+                    </a>
+                    <a class="full-screen-view" href="format_point.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                </div>
+                <div class="item">
+                    <a class="file-path" href="rain.html" target="view1">
+                        <span class="num">56</span> 
+                        下雨
+                    </a>
+                    <a class="full-screen-view" href="rain.html" target="_blank">新窗口打开，可操作图形用户界面</a>
+                </div>
+                <div class="item">
+                    <a class="file-path" href="snow.html" target="view1">
+                        <span class="num">57</span> 
+                        下雪
+                    </a>
+                    <a class="full-screen-view" href="snow2.html" target="_blank">新窗口打开，可操作图形用户界面工具</a>
+                </div>
+                <div class="item">
+                    <a href="model_click.html" class="file-path" target="view1">
+                        <span class="num">58</span> 
+                        模型交互点击事件
+                        <span>Raycaster</span>
+                    </a>
+                    <a class="full-screen-view" href="model_click.html" target="_blank">新窗口打开，可操作图形用户界面</a>
                 </div>
             </div>
         </div>
-        <iframe src="gemotry_model.html" class="iframe-view1" name="view1" frameborder="0"></iframe>
+        <iframe src="geometry_model.html" class="iframe-view1" name="view1" frameborder="0"></iframe>
     </div>
 </body>
 </html>
