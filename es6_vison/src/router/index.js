@@ -10,6 +10,20 @@ Vue.use(VueRouter)
     name: 'MultipleMaterials',
     component: MultipleMaterials
   },
+  {
+    path:"/line_dashed_material",
+    name:"LineDashedMaterial",
+    component:function(){
+      return import('../views/LineDashedMaterial.vue');
+    }
+  },
+  {
+    path:"/mesh_lambert_material",
+    name:"MeshLambertMaterial",
+    component:function(){
+      return import("../views/MeshLambertMaterial.vue");
+    }
+  }
   // {
   //   path: '/about',
   //   name: 'About',

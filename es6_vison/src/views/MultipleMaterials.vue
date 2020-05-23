@@ -1,5 +1,5 @@
 <template>
-  <canvas class="home" ref="canvas">
+  <canvas class="three-canvas" ref="canvas">
     
   </canvas>
 </template>
@@ -109,8 +109,5 @@ export default {
 </script>
 
 <style lang="scss">
-  .home{
-    height:100%;
-    width:100%;
-  }
+
 </style>
