@@ -37,7 +37,7 @@
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
+  
   color: #2c3e50;
   display:flex;
 }
@@ -71,6 +71,7 @@
     color: #2c3e50;
     text-decoration: none;
     font-size:14px;
+    text-align: center;
     &.router-link-exact-active {
       color: #42b983;
     }
@@ -82,8 +83,9 @@
 }
 
 // 画布
-.three-canvas{
+.three-canvas,.three-container{
   height:100%;
   width:100%;
+  position:relative;
 }
 </style>

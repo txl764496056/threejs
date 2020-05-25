@@ -1,12 +1,19 @@
 <template>
-    <canvas ref="canvas" class="three-canvas"></canvas>
+    <div ref="canvasContainer" class="three-container">
+        <use-explain :list="txtList"></use-explain>
+        <canvas ref="canvas" class="three-canvas"></canvas>
+    </div>
 </template>
 
 <script>
+import UseExplain from "@/components/UseExplain"
 let THREE = null;
 let OrbitControls = null;
     export default {
         name:"MeshLambertMaterial",
+        components:{
+            UseExplain
+        },
         data(){
             return {
                 renderer:null,
@@ -14,7 +21,12 @@ let OrbitControls = null;
                 sceneW:100,
                 sceneH:100,
                 camera:null,
-                orbit:null
+                orbit:null,
+                txtList:[
+                    "渲染器开启阴影渲染：renderer.shadowMapEnabled = true;",
+                    "灯光需要开启“引起阴影”：light.castShadow = true;",
+                    "物体需要开启“引起阴影”和“接收阴影”：mesh.castShadow = mesh.receiveShadow = true;"
+                ]
             }
         },
         created(){
@@ -40,14 +52,16 @@ let OrbitControls = null;
             // 初始化
             initRenderer(){
                 let canvas = this.$refs.canvas;
+                let container = this.$refs.canvasContainer;
                 this.renderer = new THREE.WebGLRenderer({
-                    canvas
+                    canvas,
+                    antilias:true //抗锯齿
                 });
                 //阴影设置-------------------------------1
                 this.renderer.shadowMap.enabled = true; //告诉渲染器需要阴影效果
                 this.renderer.shadowMap.type = THREE.PCFSoftShadowMap; // 默认(THREE.PCFShadowMap)的没有设置的这个清晰
                 
-                let style = window.getComputedStyle(canvas);
+                let style = window.getComputedStyle(container);
                 this.sceneW = parseInt(style.width);
                 this.sceneH = parseInt(style.height);
                 this.renderer.setSize(this.sceneW,this.sceneH);
@@ -65,13 +79,24 @@ let OrbitControls = null;
             },
             // 添加模型
             addModel(){
-                let geom = new THREE.BoxGeometry(15,15,15);
-                let material = new THREE.MeshLambertMaterial({color:"#9933aa"});
-                let box = new THREE.Mesh(geom,material);
-                box.position.set(20,15,0);
-                //阴影设置-------------------------------2
+                // 立方体
+                let box_geom = new THREE.BoxGeometry(16,16,16);
+                let box_material = new THREE.MeshLambertMaterial({color:"#9933aa"});
+                let box = new THREE.Mesh(box_geom,box_material);
+                box.position.set(20,8,0);
+                //阴影设置-------------------------------2-1
                 box.castShadow = true;//告诉立方体投射阴影
-                this.scene.add(box);
+
+                // 球体
+                let sphere_geom = new THREE.SphereGeometry(10,20,20);
+                let sphere_material = new THREE.MeshLambertMaterial({color:"#669933"});
+                let sphere = new THREE.Mesh(sphere_geom,sphere_material);
+                sphere.position.set(-20,20,0);
+                //阴影设置-------------------------------2-1
+                sphere.castShadow = true;
+                
+                // 加入场景
+                this.scene.add(box,sphere);
             },
             // 添加底部平面
             addPlane(){
@@ -88,19 +113,18 @@ let OrbitControls = null;
                 let light1 = new THREE.DirectionalLight({color:"#ffffff"});
                 //阴影设置-------------------------------4
                 light1.castShadow = true;//开启平行光投射
-                light1.position.set(150,150,0);
-                light1.shadow.camera.near = 20;
-                light1.shadow.camera.far = 300;
-                // light1.shadow.camera.left = -50;
-                // light1.shadow.camera.right = 50;
-                light1.shadow.camera.top = -50;
-                // 复制网上的代码，以下6行
-                // light1.shadow.camera.near = 20; //产生阴影的最近距离
-                // light1.shadow.camera.far = 200; //产生阴影的最远距离
-                // light1.shadow.camera.left = -50; //产生阴影距离位置的最左边位置
-                // light1.shadow.camera.right = 50; //最右边
-                // light1.shadow.camera.top = 50; //最上边
-                // light1.shadow.camera.bottom = -50; //最下
+                light1.position.set(120,200,0);
+                // 这里camera是正交相机（进行正交投影），与光源在同一个位置
+                light1.shadow.camera.near = 20;//产生阴影的最近距离
+                light1.shadow.camera.far = 400;//产生阴影的最远距离
+                light1.shadow.camera.left = -165;//产生阴影距离位置的最左边位置
+                light1.shadow.camera.right = 165;//最右边
+                light1.shadow.camera.top = 165;//最上边
+                light1.shadow.camera.bottom = -165;//最下
+               
+               //这两个值决定使用多少像素生成阴影 默认512，数值越大与清晰，阴影周边硬度更大
+                light1.shadow.mapSize.height = 2000;
+                light1.shadow.mapSize.width = 2000;
 
                 let light2 = new THREE.AmbientLight({color:"#ffffff"});
                 light2.position.set(-150,-150,0);
