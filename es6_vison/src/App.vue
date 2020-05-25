@@ -83,7 +83,7 @@
 }
 
 // 画布
-.three-canvas,.three-container{
+.three-container{
   height:100%;
   width:100%;
   position:relative;

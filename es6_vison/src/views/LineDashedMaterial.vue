@@ -1,7 +1,7 @@
 <template>
-    <canvas class="three-canvas" ref="canvas">
-
-    </canvas>
+    <div class="three-container" ref="canvasContainer">
+        <canvas ref="canvas"></canvas>
+    </div>
 </template>
 
 <script>
@@ -39,10 +39,11 @@ let OrbitControls = null;
             // 初始化
             initRenderer(){
                 let canvas = this.$refs.canvas;
+                let container = this.$refs.canvasContainer;
                 this.renderer = new THREE.WebGLRenderer({
                     canvas
                 });
-                let style = window.getComputedStyle(canvas);
+                let style = window.getComputedStyle(container);
                 this.sceneW = parseInt(style.width);
                 this.sceneH = parseInt(style.height);
                 this.renderer.setSize(this.sceneW,this.sceneH);

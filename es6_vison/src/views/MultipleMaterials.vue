@@ -1,7 +1,7 @@
 <template>
-  <canvas class="three-canvas" ref="canvas">
-    
-  </canvas>
+  <div ref="canvasContainer" class="three-container">
+    <canvas ref="canvas"></canvas>
+  </div>
 </template>
 
 <script>
@@ -44,13 +44,15 @@ export default {
   methods:{
     // 初始化
     initRenderer(){
-      let canvas = window.getComputedStyle(this.$refs.canvas);
+      let canvas = this.$refs.canvas;
+      let container = this.$refs.canvasContainer;
       this.renderer = new THREE.WebGLRenderer({
         canvas:this.$refs.canvas,
         antilias:true //抗锯齿
       });
-      this.sceneW = parseInt(canvas.width); //保证是数值
-      this.sceneH = parseInt(canvas.height); //保证是数值
+      let style = window.getComputedStyle(container);
+      this.sceneW = parseInt(style.width); //保证是数值
+      this.sceneH = parseInt(style.height); //保证是数值
       // 必须设置，否则会出现模型模糊
       this.renderer.setSize(this.sceneW,this.sceneH);
     },

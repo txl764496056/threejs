@@ -1,7 +1,7 @@
 <template>
     <div ref="canvasContainer" class="three-container">
         <use-explain :list="txtList"></use-explain>
-        <canvas ref="canvas" class="three-canvas"></canvas>
+        <canvas ref="canvas"></canvas>
     </div>
 </template>
 
