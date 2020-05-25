@@ -12,7 +12,6 @@
         <span class="num">36</span>
         <router-link to="/mesh_lambert_material">
           高级材质(哑光)MeshLambertMaterial
-          <b style="display:block;">未完成</b>
         </router-link>
       </div>
     </div>
