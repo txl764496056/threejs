@@ -14,6 +14,10 @@
           高级材质(哑光)MeshLambertMaterial
         </router-link>
       </div>
+      <div class="title">其他案例</div>
+      <div class="item">
+        <router-link to="/panoramic_preview">全景图360度预览</router-link>
+      </div>
     </div>
     <div class="content">
       <router-view ref="three-canvas"/>
@@ -48,6 +52,14 @@
 
 #nav {
   width:300px;
+  .title{
+    text-align:center;
+    padding:10px;
+    font-size:16px;
+    letter-spacing: 1px;
+    background-color:rgb(71, 168, 84);
+    color:#fff;
+  }
   .item{
     padding:10px;
     border-bottom:1px solid #ddd;

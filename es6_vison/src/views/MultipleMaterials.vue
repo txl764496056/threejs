@@ -9,7 +9,7 @@
 let THREE = null;
 let OrbitControls = null;
 export default {
-  name: 'GeometryModel',
+  name: 'MultipleMaterials',
   components: {
 
   },

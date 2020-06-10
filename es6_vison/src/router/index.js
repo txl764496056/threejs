@@ -23,6 +23,13 @@ Vue.use(VueRouter)
     component:function(){
       return import("../views/MeshLambertMaterial.vue");
     }
+  },
+  {
+    path:"/panoramic_preview",
+    name:"PanoramicPreview",
+    component:function(){
+      return import("../views/PanoramicPreview.vue");
+    }
   }
   // {
   //   path: '/about',
