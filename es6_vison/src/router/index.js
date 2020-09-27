@@ -30,6 +30,13 @@ Vue.use(VueRouter)
     component:function(){
       return import("../views/PanoramicPreview.vue");
     }
+  },
+  {
+    path:"/lens_flare",
+    name:"lens_flare",
+    component:function(){
+      return import("../views/LensFlare.vue")
+    }
   }
   // {
   //   path: '/about',

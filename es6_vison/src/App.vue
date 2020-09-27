@@ -2,6 +2,7 @@
   <div id="app">
     <div id="nav">
       <div class="item">
+        <span class="num">??</span>
         <router-link to="/">多种材质（多个几何体拼合）</router-link>
       </div>
       <div class="item">
@@ -12,6 +13,12 @@
         <span class="num">36</span>
         <router-link to="/mesh_lambert_material">
           高级材质(哑光)MeshLambertMaterial
+        </router-link>
+      </div>
+      <div class="item">
+        <span class="num">31</span>
+        <router-link to="/lens_flare">
+          特殊光源镜头光晕 LensFlare
         </router-link>
       </div>
       <div class="title">其他案例</div>
@@ -98,5 +105,11 @@
   height:100%;
   width:100%;
   position:relative;
+}
+
+.marker-text{
+    font-size:14px;
+    background-color:rgba(0,0,0,0.5);
+    padding:10px;
 }
 </style>

@@ -42,6 +42,9 @@
     font-size:14px;
     margin:10px 0;
 }
+ul{
+    margin-right:10px;
+}
 ul li{
     list-style: none;
     display:flex;
