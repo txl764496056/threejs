@@ -20,7 +20,8 @@ let OrbitControls = null;
                 sceneH:0,
                 sceneW:0,       
                 txtList:[
-                    "注意地平面和物体的材质， MeshStandardMaterial 和 MeshPhysicalMaterial支持这种光源"
+                    "注意地平面和物体的材质， MeshStandardMaterial 和 MeshPhysicalMaterial支持这种光源",
+                    "物体的投影需要增加其他光源（如平行光）并打开相关的阴影设置"
                 ],
                 renderer:null,
                 camera:null,
@@ -55,6 +56,7 @@ let OrbitControls = null;
                 this.renderer = new THREE.WebGLRenderer({
                     canvas
                 });
+                // 打开阴影
                 this.renderer.setSize(this.sceneW,this.sceneH);
             },
             // 场景
