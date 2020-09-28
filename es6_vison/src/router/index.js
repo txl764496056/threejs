@@ -37,7 +37,14 @@ Vue.use(VueRouter)
     component:function(){
       return import("../views/LensFlare.vue")
     }
-  }
+  },
+  {
+    path:"/camera_fly_controls",
+    name:"camera_fly_controls",
+    component:function(){
+      return import("../views/CameraFlyControls.vue");
+    }
+  },
   // {
   //   path: '/about',
   //   name: 'About',

@@ -21,6 +21,12 @@
           特殊光源镜头光晕 LensFlare
         </router-link>
       </div>
+      <div class="item">
+        <span class="num">31</span>
+        <router-link to="/camera_fly_controls">
+          飞行相机控件 FlyControls
+        </router-link>
+      </div>
       <div class="title">其他案例</div>
       <div class="item">
         <router-link to="/panoramic_preview">全景图360度预览</router-link>
