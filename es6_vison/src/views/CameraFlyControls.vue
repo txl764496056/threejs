@@ -96,14 +96,14 @@ let OrbitControls = null;
                 let material = new THREE.MeshPhongMaterial({color:"#ff00aa"});
                 let box = new THREE.Mesh(geom,material);
                 box.position.set(0,30,0);
-                box.castShadow = true;
+                box.castShadow = true;//产生阴影
                 this.scene.add(box);
                 //地平面
                 let geom2 = new THREE.PlaneGeometry(300,300,30,30);
                 let material2 = new THREE.MeshLambertMaterial({color:"#bbbbbb"});
                 let plane1 = new THREE.Mesh(geom2,material2);
                 plane1.rotation.x = -0.3*Math.PI;
-                plane1.receiveShadow = true;
+                plane1.receiveShadow = true;//接收阴影
                 this.scene.add(plane1);
             },
             // 交互

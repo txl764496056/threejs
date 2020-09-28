@@ -33,6 +33,12 @@
           特殊光源模拟窗口入射光线 RectAreaLight
         </router-link>
       </div>
+      <div class="item">
+        <span class="num">28</span>
+        <router-link to="/hemisphere_light">
+          特殊光源户外光 HemiphereLight
+        </router-link>
+      </div>
 
       <div class="title">其他案例</div>
       <div class="item">

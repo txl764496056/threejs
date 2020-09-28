@@ -52,6 +52,13 @@ Vue.use(VueRouter)
       return import("../views/RectAreaLight.vue");
     }
   },
+  {
+    path:"/hemisphere_light",
+    name:"hemisphere_light",
+    component:function(){
+      return import("../views/HemisphereLight.vue");
+    }
+  },
   // {
   //   path: '/about',
   //   name: 'About',
