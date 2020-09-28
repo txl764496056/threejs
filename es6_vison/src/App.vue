@@ -27,6 +27,13 @@
           飞行相机控件 FlyControls
         </router-link>
       </div>
+      <div class="item">
+        <span class="num">29</span>
+        <router-link to="/rect_area_light">
+          特殊光源模拟窗口入射光线 RectAreaLight
+        </router-link>
+      </div>
+
       <div class="title">其他案例</div>
       <div class="item">
         <router-link to="/panoramic_preview">全景图360度预览</router-link>

@@ -45,6 +45,13 @@ Vue.use(VueRouter)
       return import("../views/CameraFlyControls.vue");
     }
   },
+  {
+    path:"/rect_area_light",
+    name:"rect_area_light",
+    component:function(){
+      return import("../views/RectAreaLight.vue");
+    }
+  },
   // {
   //   path: '/about',
   //   name: 'About',
