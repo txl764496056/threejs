@@ -22,7 +22,7 @@
         </router-link>
       </div>
       <div class="item">
-        <span class="num">31</span>
+        <span class="num">30</span>
         <router-link to="/camera_fly_controls">
           飞行相机控件 FlyControls
         </router-link>
