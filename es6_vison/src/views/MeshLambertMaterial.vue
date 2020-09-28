@@ -1,6 +1,6 @@
 <template>
     <div ref="canvasContainer" class="three-container">
-        <use-explain :list="txtList"></use-explain>
+        <use-explain v-if="txtList.length>0" :list="txtList"></use-explain>
         <canvas ref="canvas"></canvas>
     </div>
 </template>
@@ -23,9 +23,10 @@ let OrbitControls = null;
                 camera:null,
                 orbit:null,
                 txtList:[
-                    "渲染器开启阴影渲染：renderer.shadowMapEnabled = true;",
+                    "渲染器开启阴影渲染：renderer.shadowMap.enabled = true;",
                     "灯光需要开启“引起阴影”：light.castShadow = true;",
-                    "物体需要开启“引起阴影”和“接收阴影”：mesh.castShadow = mesh.receiveShadow = true;"
+                    "物体需要开启“引起阴影”:mesh.castShadow = true,底部平面开启“接收阴影”： mesh.receiveShadow = true;",
+                    "切记，模拟地平面（接受阴影的物体）要用反光/受光的材质，不能用对光无反应的材质(会没有投影);"
                 ]
             }
         },

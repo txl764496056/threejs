@@ -1,6 +1,6 @@
 <template>
     <div class="three-container" ref="canvasContainer">
-        <use-explain :list="txtList"></use-explain>
+        <use-explain v-if="txtList.length>0" :list="txtList"></use-explain>
         <canvas ref="canvas"></canvas>
     </div>
 </template>
@@ -84,8 +84,8 @@ let OrbitControls = null;
             // 添加模型
             addModel(){
                 let gemo = new THREE.BoxGeometry(50,50,50);
-                let materail = new THREE.MeshPhongMaterial({color:"#339955"});
-                let box = new THREE.Mesh(gemo,materail);
+                let material = new THREE.MeshPhongMaterial({color:"#339955"});
+                let box = new THREE.Mesh(gemo,material);
                 this.scene.add(box);
             },
             // 交互
