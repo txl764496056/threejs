@@ -39,6 +39,12 @@
           特殊光源户外光 HemiphereLight
         </router-link>
       </div>
+      <div class="item">
+        <span class="num">26</span>
+        <router-link to="/spot_light">
+          聚光灯 SpotLight
+        </router-link>
+      </div>
 
       <div class="title">其他案例</div>
       <div class="item">

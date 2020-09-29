@@ -59,6 +59,13 @@ Vue.use(VueRouter)
       return import("../views/HemisphereLight.vue");
     }
   },
+  {
+    path:"/spot_light",
+    name:"spot_light",
+    component:function(){
+      return import("../views/SpotLight.vue");
+    }
+  },
   // {
   //   path: '/about',
   //   name: 'About',
