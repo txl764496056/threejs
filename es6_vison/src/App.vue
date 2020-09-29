@@ -45,6 +45,12 @@
           聚光灯 SpotLight
         </router-link>
       </div>
+      <div class="item">
+        <span class="num">25</span>
+        <router-link to="/point_light">
+          点光源 PointLight
+        </router-link>
+      </div>
 
       <div class="title">其他案例</div>
       <div class="item">

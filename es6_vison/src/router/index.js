@@ -66,6 +66,13 @@ Vue.use(VueRouter)
       return import("../views/SpotLight.vue");
     }
   },
+  {
+    path:"/point_light",
+    name:"point_light",
+    component:function(){
+      return import("../views/PointLight.vue");
+    }
+  }
   // {
   //   path: '/about',
   //   name: 'About',
