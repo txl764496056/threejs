@@ -24,7 +24,8 @@ let OrbitControls = null;
                     "(color1,color2,intensity) color1:天空颜色，color2:地面颜色，intensity:光照强度",
                     "从上到下的颜色变化是HemisphereLight作用",
                     "高光和阴影时DirectionalLight作用",
-                    "投影是开启投影且受DirectionalLight影响产生的"
+                    "投影是开启投影且受DirectionalLight影响产生的",
+                    "光源辅助线:绿色-户外光辅助线，红色-平行光辅助线"
                 ],
                 renderer:null,
                 camera:null,
@@ -79,9 +80,15 @@ let OrbitControls = null;
             initLight(){
                 let light1 = new THREE.HemisphereLight("#ffffff","#00ff55",0.8);
                 this.scene.add(light1);
+                // 光源辅助线
+                let light1_helper = new THREE.HemisphereLightHelper(light1,200,"#00ff00");
+                this.scene.add(light1_helper);
 
                 let light2 = new THREE.DirectionalLight("#ffffff");
                 light2.position.set(200,150,0);
+                // 光源辅助线
+                let light2_helper = new THREE.DirectionalLightHelper(light2,50,"#ff0000");
+                this.scene.add(light2_helper);
                 light2.castShadow = true;//产生阴影
                 // 投影/阴影-这里是正交相加
                 light2.shadow.camera.near = 10;
